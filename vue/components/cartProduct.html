@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+</head>
+<body>
+
+    <div class="row mb-4">
+        <div class="col-md-5 col-lg-3 col-xl-3">
+            <div class="view zoom overlay productImg rounded mb-3 mb-md-0">
+
+                <img class="img-fluid w-100 rounded" src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/12a.jpg" alt="Sample">
+
+                <!--
+                <a href="#!">
+                    <div class="mask waves-effect waves-light">
+                        <img class="img-fluid w-100" src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/12.jpg">
+                        <div class="mask rgba-black-slight waves-effect waves-light"></div>
+                    </div>
+                </a>
+                -->
+
+            </div>
+        </div>
+        <div class="col-md-7 col-lg-9 col-xl-9">
+
+
+            <div>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h5>Blue denim shirt</h5>
+                        <p class="mb-3 text-muted text-uppercase small">Shirt - blue</p>
+                        <p class="mb-2 text-muted text-uppercase small">Color: blue</p>
+                        <p class="mb-3 text-muted text-uppercase small">Size: M</p>
+                    </div>
+                    <div>
+                        <div class="number-input mb-0 w-100">
+                            <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()" class="moins">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input class="quantity" min="0" name="quantity" value="1" type="number">
+                            <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()" class="plus">
+                                <i class="fas fa-plus"></i>
+
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="#!" type="button" class="card-link-secondary text-uppercase rm"><i class="fas fa-trash-alt mr-1"></i> Remove item </a>
+                        <a href="#!" type="button" class="card-link-secondary text-uppercase"><i class="fas fa-heart mr-1"></i> Move to wish list </a>
+                    </div>
+                    <p class="mb-0"><span><strong>$17.99</strong></span></p>
+                </div>
+            </div>
+            <div></div>
+
+        </div>
+    </div>
+
+</body>
+<style>
+
+    .productImg{
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.07),0 2px 10px 0 rgba(0,0,0,0.07) !important;
+    }
+
+    .number-input{
+        border: 1px solid #ced4da;
+        width: 8.6rem;
+        border-radius: .25rem;
+    }
+
+    .plus{
+        width: 2.5rem;
+        height: .7rem;
+    }
+
+    .moins {
+        padding-left: 10px;
+        width: 2.5rem;
+        height: .7rem;
+    }
+
+    .rm{
+        margin-right: 16px;
+    }
+
+    button{
+        -webkit-appearance: none;
+        background-color: transparent;
+        border: none;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        cursor: pointer;
+        margin: 0;
+        position: relative;
+    }
+
+    .card-link-secondary {
+        color: #6c757d;
+        transition: all .2s ease-in-out;
+        font-size: 80%;
+        font-weight: 400;
+    }
+
+    .card-link-secondary:hover {
+        color: #4f4f4f;
+    }
+
+    .quantity{
+        text-align: center;
+        max-width: 3rem;
+        padding: .5rem;
+        border: 1px solid #ced4da;
+        border-top-width: 1px;
+        border-right-width: 1px;
+        border-bottom-width: 1px;
+        border-left-width: 1px;
+        border-width: 0 1px;
+        font-size: 1rem;
+        height: 2rem;
+        color: #495057;
+        appearance: textfield;
+    }
+</style>
+</html>
