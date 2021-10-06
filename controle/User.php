@@ -88,7 +88,8 @@ class User{
     public function renderProfile(){
         //1633537030
         require("./modele/UserDB.php");
-        if(UserDB::doesUserExists($_SESSION["login"]) && UserDB::isAuthOk($_SESSION["login"], $_SESSION["uAuth"]))
+        if( !empty($_SESSION["login"]) && !empty($_SESSION["uAuth"]) &&
+            UserDB::doesUserExists($_SESSION["login"]) && UserDB::isAuthOk($_SESSION["login"], $_SESSION["uAuth"]))
             // rediriger vers profil
             header("Location: ./index.php");
         else
