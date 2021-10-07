@@ -14,7 +14,7 @@ class User{
         $profil = $this->getLoginPostInfo();
 
         if (!FormValidation::areInputFilled($profil) || !FormValidation::isEmailRight($profil["email"]))
-            $this->res = "Il est indispensable de remplir correctement à tous les champs";
+            $this->res = "Il est indispensable de remplir correctement tous les champs";
         else {
             $user = new LoginClass($profil["email"], $profil["pw"]);
             $cookie = $user->connectUser();
@@ -56,7 +56,7 @@ class User{
         //var_dump($profil);
 
         if (!FormValidation::areInputFilled($profil) || !FormValidation::isEmailRight($profil["email"]))
-            $this->res = "Il est indispensable de remplir correctement à tous les champs";
+            $this->res = "Il est indispensable de remplir correctement tous les champs";
         else if ($profil["pw"] != $profil["pwConfirm"])
             $this->res = "Les mots de passe ne sont pas identiques";
         else if (UserDB::doesUserExists($profil["email"]))
