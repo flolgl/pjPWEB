@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+</head>
+<body>
+<?php require("./vue/navbar.html"); ?>
+
+    <section class="dFlex">
+
+        <?php foreach ($voitures as $v)
+                require("./vue/components/vehiculeCarte.html");
+        ?>
+
+
+    </section>
+
+
+
+</body>
+<style>
+
+    .dFlex{
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+
+
+</style>
+</html>
