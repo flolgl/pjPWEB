@@ -12,7 +12,7 @@
         <div class="col-md-5 col-lg-3 col-xl-3">
             <div class="view zoom overlay productImg rounded mb-3 mb-md-0">
 
-                <img class="img-fluid w-100 rounded" src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/12a.jpg" alt="Sample">
+                <img class="img-fluid w-100 rounded" src="<?php echo "./img/" . $a["model"] . ".webp"; ?>" alt="Sample">
 
                 <!--
                 <a href="#!">
@@ -31,10 +31,10 @@
             <div>
                 <div class="d-flex justify-content-between">
                     <div>
-                        <h5>Blue denim shirt</h5>
-                        <p class="mb-3 text-muted text-uppercase small">Shirt - blue</p>
-                        <p class="mb-2 text-muted text-uppercase small">Color: blue</p>
-                        <p class="mb-3 text-muted text-uppercase small">Size: M</p>
+                        <h5><?php echo $a["nomCateg"]; ?></h5>
+                        <p class="mb-3 text-muted text-uppercase small">Modèle - <?php echo $a["brand"]. " " .$a["model"]; ?></p>
+                        <p class="mb-2 text-muted text-uppercase small">Couleur: <?php echo $a["color"]; ?></p>
+                        <p class="mb-3 text-muted text-uppercase small">Places: <?php echo $a["nbPlaces"]; ?></p>
                     </div>
                     <div>
                         <div class="number-input mb-0 w-100">
@@ -52,10 +52,10 @@
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <a href="#!" type="button" class="card-link-secondary text-uppercase rm"><i class="fas fa-trash-alt mr-1"></i> Remove item </a>
-                        <a href="#!" type="button" class="card-link-secondary text-uppercase"><i class="fas fa-heart mr-1"></i> Move to wish list </a>
+                        <a href="#!" type="button" class="card-link-secondary text-uppercase rm"><i class="fas fa-trash-alt mr-1"></i> Retirer le véhicule </a>
+                        <!--<a href="#!" type="button" class="card-link-secondary text-uppercase"><i class="fas fa-heart mr-1"></i> Move to wish list </a>-->
                     </div>
-                    <p class="mb-0"><span><strong>$17.99</strong></span></p>
+                    <p class="mb-0"><span><strong><?php echo $a["prix"]; ?>€</strong></span></p>
                 </div>
             </div>
             <div></div>

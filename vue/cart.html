@@ -17,8 +17,8 @@
                         <h5 class="mb-4">
                             Panier :
                             <?php
-                            echo $articles["nb"];
-                            if ($articles["nb"] == 0)
+                            echo count($articles["products"]);
+                            if (count($articles["products"]) == 0)
                                 echo " article";
                             else
                                 echo " articles";
@@ -64,8 +64,7 @@
                             </li>
                         </ul>
 
-                        <button type="button" class="btn btn-primary btn-block waves-effect waves-light">go to
-                            checkout</button>
+                        <button type="button" class="btn btn-primary btn-block waves-effect waves-light">Passer au paiement</button>
 
                     </div>
                 </div>
