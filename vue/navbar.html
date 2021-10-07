@@ -27,44 +27,57 @@
 </head>
 <body>
     <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <!-- Container wrapper -->
-    <div class="container d-flex justify-content-between">
+    <nav class="navBar bg-light">
+        <!-- Container wrapper -->
+        <div class="d-flex justify-content-between align-items-center flex-wrap py-3 px-5">
 
-        <!-- Left links -->
-        <button type="button" id="louerButton" class="btn btn-outline-primary" data-mdb-ripple-color="dark">
-            Louer un véhicule
-        </button>
-        <!-- Left links -->
+            <!-- Left links -->
+            <button type="button" id="louerButton" class="btn btn-outline-primary" data-mdb-ripple-color="dark">
+                Louer un véhicule
+            </button>
+            <!-- Left links -->
 
-        <a class="navbar-brand me-2" href="./index.php">
-            <img
-                src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png"
-                height="16"
-                alt=""
-                loading="lazy"
-                style="margin-top: -1px;"
-            />
-        </a>
-
-        <div class="d-flex justify-content-center">
-            <a class="mx-2" href="./index.php?controle=Cart&action=renderCart">
-                <i class="fas fa-shopping-cart"></i>
+            <a class="navbar-brand me-2" href="./index.php">
+                <img
+                    src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png"
+                    height="16"
+                    alt=""
+                    loading="lazy"
+                    style="margin-top: -1px;"
+                />
             </a>
-            <a class="mx-2" href="./index.php?controle=User&action=renderProfile">
-                <i class="fas fa-user"></i>
-            </a>
+
+            <div class="d-flex justify-content-center">
+                <a class="mx-2" href="./index.php?controle=Cart&action=renderCart">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+                <a class="mx-2" href="./index.php?controle=User&action=renderProfile">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
+
+
+
         </div>
-
-
-
-    </div>
-    <!-- Container wrapper -->
-  </nav>
+        <!-- Container wrapper -->
+    </nav>
   <!-- Navbar -->
 </body>
 <style>
+
+    @media (max-width: 992px){
+        .navbar-brand {
+
+            position: static !important;
+        }
+    }
+
+    .navBar{
+        box-shadow: 0 10px 20px 0 rgba(0,0,0,.05);
+    }
+
     .fas{
+        transition: all .2s ease-in-out;
         color: rgba(0,0,0,.55);
     }
 
@@ -72,6 +85,13 @@
     .fas:hover{
         color: rgba(0,0,0,.7);
     }
+
+    .navbar-brand {
+        transform: translateX(-50%);
+        left: 50%;
+        position: absolute;
+    }
+
 
     #louerButton:hover{
         color: #fff !important;
