@@ -16,9 +16,12 @@
                 <hr>
             </div>
             <p class="price">120€</p>
-            <button class="btn btn-primary btn-sm mr-1 mb-2 waves-effect waves-light" type="button">
-                <i class="fas fa-shopping-cart iconPadding cart"></i>Ajouter au panier
-            </button>
+            <form method="POST" action=<?php echo "./index.php?controle=Voiture&action=addToPanier&voitureId=" . $v["id"]; ?>>
+                <input class="btn btn-primary btn-sm mr-1 mb-2 waves-effect waves-light" type="submit"
+                    value ='Ajouter au panier'
+                >
+            </form>
+
             <button class="btn btn-light btn-sm mr-1 mb-2 waves-effect waves-light" type="button">
                 <i class="fas fa-info-circle iconPadding"></i>+ de details
             </button>
