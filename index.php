@@ -9,8 +9,9 @@ if (isset($_GET['controle']) && isset($_GET['action'])) {
     $controle = $_GET['controle'];
     $action = $_GET['action'];
 } else { //absence de paramètres : prévoir des valeurs par défaut
-    $controle = "accueil";
-    $action = "renderAccueil";
+    //echo "absence"; die();
+    $controle = "Voiture";
+    $action = "renderCatalogueVoitures";
 }
 
 //inclure le fichier php de contrôle
@@ -18,15 +19,17 @@ if (isset($_GET['controle']) && isset($_GET['action'])) {
 // c1 = nom du fichier
 // a11 = nom de la fonction
 if (!file_exists("./controle/$controle.php")) {
-    $controle = "accueil";
-    $action = "renderAccueil";
+    echo "file not exist" . $controle;die();
+    $controle = "Voiture";
+    $action = "renderCatalogueVoitures";
 }
 
 require_once('./controle/' . $controle . '.php');
 $controle = new $controle();
 if (!method_exists($controle, $action)) {
-    $controle = "accueil";
-    $action = "renderAccueil";
+    echo "method not exist" . $action; die();
+    $controle = "Voiture";
+    $action = "renderCatalogueVoitures";
     require_once('./controle/' . $controle . '.php');
     $controle = new $controle();
     $controle->$action();
@@ -34,6 +37,7 @@ if (!method_exists($controle, $action)) {
 
 }
 else
+    //echo $action;die();
     $controle->$action();
 
 
