@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>ILoueUnaWagen</title>
+</head>
+<body>
+    <?php require("./vue/navbar.html"); ?>
+
+    <section class="bg-white mt-5">
+
+        <div class="d-flex justify-content-center align-items-center mb-4 titleContainer">
+            <h1><a href="http://blog.stackfindover.com/" rel="dofollow">ILoueUnaWagen</a></h1>
+        </div>
+
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                    <div class="card cardBorder" >
+                        <div class="card-body p-5">
+                            <span class="connectMessage">Ajout d'une voiture</span>
+
+                            <form method="POST" class="formulaire" action="./index.php?controle=Voiture&action=addVoiture">
+
+
+                                <div class="form-outline mb-4">
+                                    <input type="email" id="emailInput" onfocusout="emailVerif()" name="email" class="form-control form-control-lg" value=""/>
+                                    <label class="form-label" for="emailInput">Marque et nom du modèle</label>
+                                </div>
+
+
+
+
+
+                                <div class="form-outline mb-4">
+                                    <input type="password" id="pwInput" onfocusout="inputVerif()" name="pw" class="form-control form-control-lg" />
+                                    <label class="form-label" for="pwInput"></label>
+                                </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <p class="errorText"><?php echo $res; ?> </p>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <input type="submit" name="submitButton" value="Se connecter" class="btn btn-success btn-block btn-lg btn-blue text-body">
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-link pt-5 d-flex justify-content-center">
+                <div class="d-flex justify-content-center align-items-center flex-column">
+                    <span>Vous n'avez pas de compte ? <a href="./index.php?controle=User&action=renderRegister">Créer un compte</a></span>
+                    <div class="listing d-flex justify-content-center align-items-center">
+                        <span><a href="#">© Stackfindover</a></span>
+                        <span><a href="#">Contact</a></span>
+                        <span><a href="#">Privacy & terms</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+<style>
+
+    .titleContainer h1{
+        font-size: calc(1.375rem + 1.5vw) !important;
+        font-weight: 500;
+        line-height: 1.2;
+        font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Ubuntu,sans-serif;
+
+    }
+
+    .connectMessage{
+        display: block;
+        font-size: 20px;
+        line-height: 28px;
+        color: #1a1f36;
+        padding-bottom: 15px;
+    }
+    .errorText{
+        color:#f00;
+        text-align: center;
+    }
+
+    .cardBorder{
+        border-radius: 4px;
+        box-shadow: rgba(60, 66, 87, 0.12) 0px 7px 14px 0px, rgba(0, 0, 0, 0.12) 0px 3px 6px 0px;
+    }
+
+    .footer-link span {
+        font-size: 14px;
+        text-align: center;
+        line-height: 28px;
+        color: #1a1f36;
+    }
+
+    .listing a {
+        color: #697386;
+        font-weight: 600;
+        margin: 0 10px;
+    }
+
+    a:hover {
+        color: #0e52c1;
+    }
+
+    .btn-blue{
+        background-color: #1266f1;
+        color:#fff !important;
+    }
+
+    .btn-blue:hover{
+        background-color: #0e52c1;
+
+    }
+</style>
+<script>
+    document.querySelectorAll('.form-outline').forEach(formOutline => {
+        new mdb.Input(formOutline).init();
+    });
+
+    document.querySelectorAll(".form-control").forEach(element => {
+        element.addEventListener("onfocusout", verifInput());
+    });
+
+</script>
+</html>
