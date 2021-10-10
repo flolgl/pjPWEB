@@ -28,7 +28,7 @@ class User{
 
         }
         unset($profil["pw"]);
-        $this->renderLogin($profil);
+        $this->renderLogin();
     }
 
     private function getLoginPostInfo(){
@@ -68,7 +68,7 @@ class User{
                 $this->res = "Erreur lors de l'enregistrement";
         }
         unset($profil["pw"], $profil["pwConfirm"]);
-        $this->renderRegister($profil);
+        $this->renderRegister();
 
     }
 
