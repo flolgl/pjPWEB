@@ -40,13 +40,13 @@ class Admin
 
     private function getJsonTableFromCar($car){
         $tab = array();
-        $tab[] = $car["carClim"];
-        $tab[] = $car["carVitesse"];
-        $tab[] = $car["carColor"];
-        $tab[] = $car["carMoteur"];
-        $tab[] = $car["carCateg"];
-        $tab[] = $car["carPlaces"];
-        $tab[] = $car["carPortes"];
+        $tab["climatisation"] = $car["carClim"];
+        $tab["vitesse"] = $car["carVitesse"];
+        $tab["color"] = $car["carColor"];
+        $tab["moteur"] = $car["carMoteur"];
+        $tab["categ"] = $car["carCateg"];
+        $tab["places"] = $car["carPlaces"];
+        $tab["portes"] = $car["carPortes"];
         return json_encode($tab);
     }
 
