@@ -13,28 +13,29 @@ class Cart
         }
 
         require("./modele/VoitureDB.php");
-        for ($i = 0; $i<count($_SESSION["panier"]); $i++){
-            if (!isset($_SESSION["panier"][$i]))
+        $i = 0;
+        foreach($_SESSION["panier"] as $item){
+            if (!isset($item))
                 continue;
-            $car = VoitureDB::getVoitureFromId($_SESSION["panier"][$i]);
+            $car = VoitureDB::getVoitureFromId($item);
             $articles[$i]["model"] = $car[0]["type"];
             $articles[$i]["id"] = $car[0]["id"];
             $articles[$i]["prix"] = $car[0]["prix"];
             $articles[$i]["photo"] = $car[0]["photo"];
             $articles[$i]["caract"] = json_decode($car[0]["caract"], true);
-            $prixTotal = $car[0]["prix"];
+            $prixTotal += $car[0]["prix"];
+            $i++;
         }
 
 
         require("./vue/cart.html");
-
     }
 
     public function removeCarFromPanier(){
 
-        for ($i = 0; $i<count($_SESSION["panier"]); $i++){
-            if ($_GET["voitureId"] == $_SESSION["panier"][$i]) {
-                $_SESSION["panier"][$i] = null;
+        foreach($_SESSION["panier"] as $k => $v){
+            if ($_GET["voitureId"] == $v) {
+                unset($_SESSION["panier"][$k]);
                 break;
             }
 

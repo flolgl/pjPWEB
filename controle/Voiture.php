@@ -11,8 +11,10 @@ class Voiture{
         if (!isset($_GET["voitureId"]))
             return;
 
-        if (!isset($_SESSION["panier"]))
-            $_SESSION["panier"] = array();
+
+        if (!isset($_SESSION["panier"])) {
+                $_SESSION["panier"] = array();
+        }
         $_SESSION["panier"][] = $_GET["voitureId"];
         $_SESSION["panier"] = array_unique($_SESSION["panier"]);
         $this->renderCatalogueVoitures();
