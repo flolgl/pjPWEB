@@ -5,16 +5,26 @@ class Admin
 
     private $res = "";
 
-    public function renderAddCar()
-    {
+    public function renderAddCar(){
         $res = $this->res;
         $car = $this->getPostInfo();
+        $carNames = $this->getVoituresNamesAndPhotoNamesMap();
         require("./vue/ajoutVoitures.html");
     }
 
-    public function addVoiture()
-    {
-        require("./modele/VoitureDB.php");
+    private function getVoituresNamesAndPhotoNamesMap(){
+        require_once("./modele/VoitureDB.php");
+        $carNames = VoitureDB::getAllVoituresNamesAndPhotoName();
+        $map = array();
+        foreach ($carNames as $car)
+            $map[$car["type"]] = $car["photo"];
+
+        return $map;
+
+    }
+
+    public function addVoiture(){
+        require_once("./modele/VoitureDB.php");
         $car = $this->getPostInfo();
 
         if (!$this->isCarInfoFilled($car)) {
@@ -25,6 +35,8 @@ class Admin
             $this->res = "Le format de la plaque est mauvais";
         } else if (VoitureDB::doesVoitureExists($car["carPlate"])) {
             $this->res = "Voiture déjà existante en base de données";
+        } else if (!$this->isImageValid($car["carImage"])){
+            $this->res = "L'image de la voiture n'est pas au bon format";
         } else {
             $tab = $this->getJsonTableFromCar($car);
             if (VoitureDB::insertNewVoiture($car, $tab)) {
@@ -36,6 +48,10 @@ class Admin
         }
         $this->renderAddCar();
 
+    }
+
+    private function isImageValid($image){
+        return true;
     }
 
     private function getJsonTableFromCar($car){
@@ -55,7 +71,6 @@ class Admin
         $car["carClim"] = isset($_POST["carClim"]);
         $car["carVitesse"] = isset($_POST["carVitesse"]);
         $car["carName"] = isset($_POST["carName"]) ? $_POST["carName"] : "";
-        $car["photo"] = isset($_POST["photo"]) ? $_POST["photo"] : "dd";
         $car["carEtat"] = isset($_POST["carEtat"]) ? $_POST["carEtat"] : "";
         $car["carPlate"] = isset($_POST["carPlate"]) ? $_POST["carPlate"] : "";
         $car["carPrice"] = isset($_POST["carPrice"]) ? $_POST["carPrice"] : "";
@@ -64,6 +79,12 @@ class Admin
         $car["carCateg"] = isset($_POST["carCateg"]) ? $_POST["carCateg"] : "";
         $car["carPlaces"] = isset($_POST["carPlaces"]) ? $_POST["carPlaces"] : "";
         $car["carPortes"] = isset($_POST["carPortes"]) ? $_POST["carPortes"] : "";
+
+        if (isset($_POST["carImage"]) && $_POST["carImage"] !== "noImage")
+            $car["carImage"] = $_POST["carImage"];
+        else
+            $car["carImage"] = isset($_POST["carImageUpload"]) ? $_POST["carImageUpload"] : "";
+
         return $car;
     }
 
@@ -74,17 +95,18 @@ class Admin
     }
 
     private function isCarInfoFilled($car){
-        $indice = 0;
         $res = true;
 
-        foreach($car as $c){
-            if($indice < 2)
-                break;
 
-            if (empty($c))
+        foreach($car as $key => $value){
+            if($key === "carClim" || $key === "carVitesse")
+                continue;
+
+            if (empty($value))
                 $res = false;
-            $indice++;
+
         }
+
         return $res;
 
     }

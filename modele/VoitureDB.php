@@ -19,6 +19,23 @@ class VoitureDB{
         return $resultat;
     }
 
+    public static function getAllVoituresNamesAndPhotoName(){
+        require("./modele/connect.php");
+
+        $sql = "SELECT DISTINCT type, photo FROM voiture";
+        try{
+            $stmt = $pdo->prepare($sql);
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+
+        return $resultat;
+    }
+
     public static function getVoitureFromId($id){
         require("./modele/connect.php");
 
@@ -67,7 +84,7 @@ class VoitureDB{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':carName', $car["carName"], PDO::PARAM_STR);
             $stmt->bindParam(':caract', $json, PDO::PARAM_STR);
-            $stmt->bindParam(':photo', $car["photo"], PDO::PARAM_STR);
+            $stmt->bindParam(':photo', $car["carImage"], PDO::PARAM_STR);
             $stmt->bindParam(':plaque', $car["carPlate"], PDO::PARAM_STR);
             $stmt->bindParam(':etatL', $car["carEtat"], PDO::PARAM_STR);
             $stmt->bindParam(':prix', $car["carPrice"], PDO::PARAM_STR);
