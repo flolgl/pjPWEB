@@ -7,6 +7,14 @@ class Voiture{
         require("./vue/accueil.html");
     }
 
+    public function renderCarDetails(){
+        require("./modele/VoitureDB.php");
+
+        $v = VoitureDB::getVoitureFromId($_GET["voitureId"])[0];
+        $v["caract"] = json_decode($v["caract"], true);
+        require("./vue/detailsCar.html");
+    }
+
     public function addToPanier(){
         if (!isset($_GET["voitureId"]))
             return;

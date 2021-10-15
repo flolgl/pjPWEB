@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Détails</title>
+</head>
+<body>
+<?php require("./vue/navbar.html"); ?>
+
+  <div class="productPageContainer">
+      <div class="containerChild">
+          <div class="cardContainer">
+              <div class="carCard">
+                  <img class="carImg" src="<?php echo "./img/" . $v["photo"] . ".webp"; ?>"/>
+              </div>
+
+          </div>
+      </div>
+      <div class="containerChild">
+          <h5 class="textDetails"><?php echo $v["type"];?></h5>
+          <p class="text-muted small text-uppercase textDetails"><?php echo $v["caract"]["categ"]; ?></p>
+          <span class="textDetails">
+              <strong><?php echo $v["prix"] ?>€</strong>
+          </span>
+          <div class="">
+                  <p class="mb-2 text-muted text-uppercase small"><strong class="detailTitle">Couleur:</strong> <?php echo $v["caract"]["color"]; ?></p>
+                  <p class="mb-2 text-muted text-uppercase small"><strong class="detailTitle">Places:</strong> <?php echo $v["caract"]["places"]; ?></p>
+                  <p class="mb-2 text-muted text-uppercase small"><strong class="detailTitle">Portes:</strong> <?php echo $v["caract"]["portes"]; ?></p>
+
+                  <p class="mb-2 text-muted text-uppercase small"><strong class="detailTitle">Moteur:</strong> <?php echo $v["caract"]["moteur"]; ?></p>
+                  <p class="mb-2 text-muted text-uppercase small"><strong class="detailTitle">Boîte:</strong> <?php echo $v["caract"]["vitesse"]; ?></p>
+                  <p class="mb-2 text-muted text-uppercase small"><strong class="detailTitle">Climatisation:</strong> <?php echo $v["caract"]["climatisation"] ? "Oui" : "Non"; ?></p>
+          </div>
+
+          <hr/>
+
+          <form method="POST" class="dFlex" action=<?php echo "./index.php?controle=Voiture&action=addToPanier&voitureId=" . $v["id"]; ?>>
+              <input class="btn btn-primary btn-sm mr-1 mb-2 waves-effect waves-light" type="submit"
+                     value ='Ajouter au panier'
+              >
+          </form>
+      </div>
+  </div>
+    <div class="tabsContainer">
+        <ul class="tabsTitle">
+            <li class="clickable clicked" onclick="setNewTab(this)">
+                <a>Description</a>
+
+                <hr class="optionSelect">
+                <div class="blueTraitPos">
+                    <hr class="blueTrait dNone">
+                </div>
+            </li>
+            <li class="clickable" onclick="setNewTab(this)">
+                <a>Description</a>
+
+                <hr class="optionSelect">
+                <div class="blueTraitPos">
+                    <hr class="blueTrait dNone">
+                </div>
+            </li>
+            <li class="clickable" onclick="setNewTab(this)">
+                <a>Description</a>
+
+                <hr class="optionSelect">
+                <div class="blueTraitPos">
+                    <hr class="blueTrait dNone">
+                </div>
+            </li>
+
+
+        </ul>
+        <div>
+
+        </div>
+
+    </div>
+
+</body>
+<style>
+
+    .dNone{
+        display: none;
+    }
+
+    .clicked a{
+        color:#1266f1 !important;
+    }
+
+    .clicked .blueTrait{
+        display: block !important;
+        position:absolute;
+        height: 3px !important;
+        background-color:#1266f1;
+        top: -36px;
+        width: 100%;
+        opacity: 1;
+    }
+
+    .clickable{
+        cursor: pointer;
+    }
+
+    .blueTraitPos{
+        position:relative;
+    }
+
+
+    .tabsContainer{
+        margin:3em;
+        padding-right: 1em;
+        padding-left: 1em;
+    }
+
+    @media (max-width: 1050px){
+        .productPageContainer{
+            display: block;
+            margin: 3em;
+        }
+    }
+
+    @media (min-width: 1050px){
+        .productPageContainer{
+            display:flex;
+            margin:3em;
+            justify-content: center;
+            padding-right: 1em;
+            padding-left: 1em;
+            flex-wrap: wrap;
+
+        }
+
+        .containerChild{
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+
+    }
+
+    .tabsTitle{
+        display: flex;
+        list-style-type: none;
+        padding-left: 0 !important;
+    }
+
+    .tabsTitle li{
+        flex: 1;
+        text-align: center;
+        text-transform: uppercase;
+
+    }
+
+    .detailTitle{
+        color:#4f4f4f;
+    }
+
+  .containerChild{
+    flex: 1;
+  }
+
+  .detailsContainer{
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+  }
+
+  .textDetails{
+      text-align: center;
+  }
+  .cardContainer{
+      padding: 16px;
+      text-align: center;
+  }
+
+  .cardContainer hr{
+      max-width: 400px;
+      width: 100%;
+  }
+
+  .dFlex{
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+  }
+
+  .carCard{
+      text-align: center;
+
+      box-shadow: 0 8px 17px 0 rgba(0,0,0,0.07),0 6px 20px 0 rgba(0,0,0,0.07) !important;
+      border-radius: .25rem !important;
+      background-color: rgba(0,0,0,0.01);
+      margin-bottom: 1rem;
+  }
+
+  .carImg{
+      background-color: rgba(0,0,0,0.01);
+      width: 100%;
+      height: auto;
+  }
+</style>
+
+<script>
+    function setNewTab(element){
+        if (element.classList.contains("clicked"))
+            return;
+        else {
+            var testElements = document.getElementsByClassName('clickable clicked');
+            console.log(testElements);
+            testElements[0].classList.remove("clicked");
+            element.classList.add("clicked");
+        }
+
+    }
+</script>
+</html>

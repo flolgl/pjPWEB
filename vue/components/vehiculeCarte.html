@@ -22,9 +22,11 @@
                 >
             </form>
 
-            <button class="btn btn-light btn-sm mr-1 mb-2 waves-effect waves-light" type="button">
-                <i class="fas fa-info-circle iconPadding"></i>+ de details
-            </button>
+            <form method="POST" action=<?php echo "./index.php?controle=Voiture&action=renderCarDetails&voitureId=" . $v["id"]; ?>>
+                <input class="btn btn-light btn-sm mr-1 mb-2 waves-effect waves-light" type="submit"
+                       value ='+ de détails'
+                >
+            </form>
         </div>
     </div>
 </body>
