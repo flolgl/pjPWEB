@@ -51,9 +51,13 @@
                 <a class="mx-2" href="./index.php?controle=Cart&action=renderCart">
                     <i class="fas fa-shopping-cart"></i>
                 </a>
-                <a class="mx-2" href="./index.php?controle=User&action=renderProfile">
-                    <i class="fas fa-user"></i>
-                </a>
+                <?php
+                    if (!isset($_SESSION["login"]))
+                        echo '<a class="mx-2" href="./index.php?controle=User&action=renderProfile"> <i class="fas fa-user"></i> </a>';
+                    else
+                        echo '<a class="mx-2" href="./index.php?controle=User&action=disconnect"> <i class="fas fa-sign-out-alt"></i> </a>';
+                ?>
+
             </div>
 
 
