@@ -51,6 +51,7 @@ class User{
     public function processRegister(){
         include "./controle/FormValidation.php";
         require("./modele/UserDB.php");
+        require ("./modele/LoginClass.php");
 
         $profil = $this->getRegisterPostInfo();
         //var_dump($profil);
@@ -62,12 +63,18 @@ class User{
         else if (UserDB::doesUserExists($profil["email"]))
             $this->res = "Utilisateur déjà existant";
         else {
-            if (UserDB::insertUserIntoBdd($profil))
-                header("Location: ./index.php");
+            if (UserDB::insertUserIntoBdd($profil)){
+                $user = new LoginClass($profil["email"], $profil["pw"]);
+                $cookie = $user->connectUser();
+                if($cookie != null) {
+                    $_SESSION["uAuth"] = $cookie;
+                    $_SESSION["login"] = $profil["email"];
+                    header("Location: ./index.php");
+                }
+            }
             else
                 $this->res = "Erreur lors de l'enregistrement";
         }
-        unset($profil["pw"], $profil["pwConfirm"]);
         $this->renderRegister();
 
     }
@@ -94,6 +101,12 @@ class User{
             header("Location: ./index.php");
         else
             $this->renderLogin();
+    }
+
+    public function disconnect(){
+        $_SESSION["login"] = $_SESSION["uAuth"]  = null;
+        header("Location: ./index.php");
+
     }
 
 
