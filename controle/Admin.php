@@ -51,6 +51,15 @@ class Admin
     }
 
     private function isImageValid($image){
+
+        imagewebp($image,'image.webp');
+    
+        $matches=preg_match('/(webp)$/i', $image, $tabMatches);
+        if ($matches==0) return false;
+        /* Faut definrir une taille max si on veut 
+        $max = 1000;
+        if (filesize($image) >$max) return false;
+        */
         return true;
     }
 
