@@ -34,7 +34,7 @@ class LoginClass
         if (!$this->userAuth)
             return false;
 
-        $sql = "UPDATE client SET jeton = :cookie, jetonTime = :cookieTime WHERE id = :id";
+        $sql = "UPDATE user SET jeton = :cookie, jetonTime = :cookieTime WHERE id = :id";
 
         require("./modele/UserDB.php");
         $id = UserDB::getUserId($this->email);
@@ -93,7 +93,7 @@ class LoginClass
 
         // hash pw
 
-        $sql = "SELECT email, password FROM client WHERE email=:email";
+        $sql = "SELECT email, password FROM user WHERE email=:email";
         try{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':email', $this->email, PDO::PARAM_STR);

@@ -205,10 +205,33 @@ class User{
             return header("Location: index.php?controle=User&action=renderAllLocationsOfUser");
 
         $total = 0;
+        $loueur = false;
         foreach ($locationInfo as $item)
             $total += $item["total"];
 
         require("./vue/factureLocation.html");
+    }
+
+    public function getAllFacturesOfLoueur(){
+        if (!User::isUserLoggedIn())
+            return self::redirectUserToLoginAndDisconnect();
+
+        require_once("./modele/LocationDB.php");
+        require_once("./modele/UserDB.php");
+        $locationInfo = LocationDB::getAllFactureOfLoueurDB(UserDB::getUserId($_SESSION["login"]));
+
+        if (empty($locationInfo))
+            return header("Location: index.php?controle=User&action=renderAllLocationsOfUser");
+
+
+        $total = 0;
+        foreach ($locationInfo as $item)
+            $total += $item["total"];
+        $loueur = true;
+
+        require("./vue/factureLocation.html");
+
+
     }
 
     private function getFacturation(){

@@ -8,7 +8,7 @@ class UserDB{
 
         require("./modele/connect.php");
 
-        $sql = "SELECT email FROM client WHERE email=:email";
+        $sql = "SELECT email FROM user WHERE email=:email";
         try{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -29,7 +29,7 @@ class UserDB{
 
         require("./modele/connect.php");
 
-        $sql = "SELECT email FROM client WHERE id=:id";
+        $sql = "SELECT email FROM user WHERE id=:id";
         try{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':id', $userId, PDO::PARAM_STR);
@@ -47,7 +47,7 @@ class UserDB{
     public static function getGroup($email){
         require("./modele/connect.php");
 
-        $sql = "SELECT groupe FROM client WHERE email=:email";
+        $sql = "SELECT groupe FROM user WHERE email=:email";
         try{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -67,7 +67,7 @@ class UserDB{
         require("./modele/connect.php");
         $hashedPassword = password_hash($profil["pw"], PASSWORD_DEFAULT);
 
-        $sql = "INSERT INTO client (nom, prenom, password, email) VALUES (:nom, :prenom, :pw, :email)";
+        $sql = "INSERT INTO user (nom, prenom, password, email) VALUES (:nom, :prenom, :pw, :email)";
         try{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':pw', $hashedPassword, PDO::PARAM_STR);
@@ -94,7 +94,7 @@ class UserDB{
 
         require("./modele/connect.php");
 
-        $sql = "SELECT email, jetonTime FROM client WHERE email=:email AND jeton=:jeton";
+        $sql = "SELECT email, jetonTime FROM user WHERE email=:email AND jeton=:jeton";
         try{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -116,7 +116,7 @@ class UserDB{
     public static function getNameWithUserId($userId){
         require("./modele/connect.php");
 
-        $sql = "SELECT nom, prenom FROM client WHERE id=:userId";
+        $sql = "SELECT nom, prenom FROM user WHERE id=:userId";
         try{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
@@ -137,7 +137,7 @@ class UserDB{
     public static function getUserId($email){
         require("./modele/connect.php");
 
-        $sql = "SELECT id FROM client WHERE email=:email";
+        $sql = "SELECT id FROM user WHERE email=:email";
 
         try{
             $stmt = $pdo->prepare($sql);
@@ -157,7 +157,7 @@ class UserDB{
     public static function getUserMail($userId){
         require("./modele/connect.php");
 
-        $sql = "SELECT email FROM client WHERE id=:userId";
+        $sql = "SELECT email FROM user WHERE id=:userId";
 
         try{
             $stmt = $pdo->prepare($sql);

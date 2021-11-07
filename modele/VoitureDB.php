@@ -121,13 +121,13 @@ class VoitureDB{
 
     private static function getUserChoiceOfShowing($stockCar, $rentedCar){
         if ($stockCar && $rentedCar) // montrer toutes les voitures
-            return "SELECT voiture.* FROM voiture, client WHERE client.email = :email AND voiture.idLoueur = client.id";
+            return "SELECT voiture.* FROM voiture, user WHERE user.email = :email AND voiture.idLoueur = user.id";
 
         if (!$stockCar && $rentedCar) // montrer seulement les voitures louées
-            return "SELECT voiture.* FROM voiture, location, client WHERE location.idVoiture = voiture.id AND voiture.idLoueur = client.id AND client.email = :email";
+            return "SELECT voiture.* FROM voiture, location, user WHERE location.idVoiture = voiture.id AND voiture.idLoueur = user.id AND user.email = :email";
 
         if ($stockCar && !$rentedCar) // montrer seulement les voitures en stock
-            return "SELECT voiture.* FROM voiture, client WHERE client.email = :email AND voiture.idLoueur = client.id AND voiture.id NOT IN(SELECT location.idVoiture FROM location)";
+            return "SELECT voiture.* FROM voiture, user WHERE user.email = :email AND voiture.idLoueur = user.id AND voiture.id NOT IN(SELECT location.idVoiture FROM location)";
 
         return ""; // Ne rien montrer
 
