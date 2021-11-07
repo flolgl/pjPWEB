@@ -1,13 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-
-
-</head>
-<body>
-
     <div class="row mb-4">
         <div class="col-md-5 col-lg-3 col-xl-3">
             <div class="view zoom overlay productImg rounded mb-3 mb-md-0">
@@ -16,13 +8,15 @@
         </div>
         <div class="col-md-7 col-lg-9 col-xl-9">
 
-            <div>
+            <div class="px-5">
                 <div class="d-flex justify-content-between">
                     <div>
                         <h5><?php echo $a["type"]; ?></h5>
                         <p class="mb-2 text-muted text-uppercase small">Catégorie: <?php echo $a["caract"]["categ"]; ?></p>
                         <p class="mb-2 text-muted text-uppercase small">Couleur: <?php echo $a["caract"]["color"]; ?></p>
                         <p class="mb-2 text-muted text-uppercase small">Places: <?php echo $a["caract"]["places"]; ?></p>
+                        <p class="mb-2 text-muted text-uppercase small">Début de la location: <?php echo str_replace(' ', '/', $a["tDebut"]); ?></p>
+                        <p class="mb-2 text-muted text-uppercase small">Prix de la journée: <?php echo $a["prixJour"]."€"; ?></p>
                     </div>
 
                     <div>
@@ -30,28 +24,25 @@
                         <p class="mb-2 text-muted text-uppercase small">Boîte: <?php echo $a["caract"]["vitesse"]; ?></p>
                         <p class="mb-2 text-muted text-uppercase small">Climatisation: <?php echo $a["caract"]["climatisation"] ? "Oui" : "Non"; ?></p>
                         <p class="mb-2 text-muted text-uppercase small">Portes: <?php echo $a["caract"]["portes"]; ?></p>
+                        <p class="mb-2 text-muted text-uppercase small">Fin de la location: <?php echo str_replace(' ', '/', $a["tFin"]); ?></p>
+                        <p class="mb-2 text-muted text-uppercase small">Durée: <?php echo $a["duree"] . "jour(s)";?></p>
                     </div>
 
-                    <div>
-                        <div class="number-input mb-0 w-100">
-                            <button onclick="this.parentNode.querySelector('input[type=number]').stepDown()" class="moins">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                            <input class="quantity" min="0" name="quantity" value="1" type="number">
-                            <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()" class="plus">
-                                <i class="fas fa-plus"></i>
-
-                            </button>
-                        </div>
-
-                    </div>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <a href=<?php echo "./index.php?controle=Cart&action=removeCarFromPanier&voitureId=" . $a["id"]; ?> type="button" class="card-link-secondary text-uppercase rm"><i class="fas fa-trash-alt mr-1"></i> Retirer le véhicule </a>
+                        <a href=<?php echo "./index.php?controle=User&action=arreterLocation&locationId=" . $a["idLoc"]; ?> type="button" class="card-link-secondary text-uppercase rm">
+                            <i class="fas fa-trash-alt mr-1"></i>
+                            Arrêter la location du véhicule
+                        </a>
+                        <br>
+                        <a href=<?php echo "./index.php?controle=User&action=renderFacturation&locationId=" . $a["idLoc"]; ?> type="button" class="card-link-secondary text-uppercase rm">
+                            <i class="fas fa-file-invoice mr-1"></i>
+                            Accéder à la facturation
+                        </a>
                         <!--<a href="#!" type="button" class="card-link-secondary text-uppercase"><i class="fas fa-heart mr-1"></i> Move to wish list </a>-->
                     </div>
-                    <p class="mb-0"><span><strong><?php echo $a["prix"]; ?>€</strong></span></p>
+                    <p class="mb-0"><span><strong><?php echo $a["plaque"]; ?></strong></span></p>
                 </div>
             </div>
             <div></div>

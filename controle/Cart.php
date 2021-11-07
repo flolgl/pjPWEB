@@ -18,7 +18,7 @@ class Cart
             if (!isset($item))
                 continue;
             $car = VoitureDB::getVoitureFromId($item);
-            $articles[$i]["model"] = $car[0]["type"];
+            $articles[$i]["type"] = $car[0]["type"];
             $articles[$i]["id"] = $car[0]["id"];
             $articles[$i]["prix"] = $car[0]["prix"];
             $articles[$i]["photo"] = $car[0]["photo"];

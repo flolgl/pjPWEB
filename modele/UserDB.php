@@ -23,6 +23,46 @@ class UserDB{
         return !empty($resultat);
     }
 
+    public static function doesUserExistsWithId($userId){
+        if(empty($userId))
+            return false;
+
+        require("./modele/connect.php");
+
+        $sql = "SELECT email FROM client WHERE id=:id";
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':id', $userId, PDO::PARAM_STR);
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+
+        return !empty($resultat);
+    }
+
+    public static function getGroup($email){
+        require("./modele/connect.php");
+
+        $sql = "SELECT groupe FROM client WHERE email=:email";
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+
+        return $resultat[0]["groupe"];
+
+    }
+
     public static function insertUserIntoBdd($profil){
         require("./modele/connect.php");
         $hashedPassword = password_hash($profil["pw"], PASSWORD_DEFAULT);
@@ -71,6 +111,64 @@ class UserDB{
             return false;
 
         return time()<$resultat[0]["jetonTime"];
+    }
+
+    public static function getNameWithUserId($userId){
+        require("./modele/connect.php");
+
+        $sql = "SELECT nom, prenom FROM client WHERE id=:userId";
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+
+        return $resultat[0]["nom"]." ".$resultat[0]["prenom"];
+    }
+
+    /**
+     * @return int l'id en bdd du user
+     */
+    public static function getUserId($email){
+        require("./modele/connect.php");
+
+        $sql = "SELECT id FROM client WHERE email=:email";
+
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL 1\n");
+            else
+                return $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["id"]; //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+
+    }
+
+
+    public static function getUserMail($userId){
+        require("./modele/connect.php");
+
+        $sql = "SELECT email FROM client WHERE id=:userId";
+
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':userId', $userId, PDO::PARAM_STR);
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                return $stmt->fetchAll(PDO::FETCH_ASSOC)[0]["email"]; //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
     }
 
 }

@@ -36,7 +36,8 @@ class LoginClass
 
         $sql = "UPDATE client SET jeton = :cookie, jetonTime = :cookieTime WHERE id = :id";
 
-        $id = $this->getUserId();
+        require("./modele/UserDB.php");
+        $id = UserDB::getUserId($this->email);
         $cookie = $this->generateCookie($id);
 
 
@@ -78,34 +79,16 @@ class LoginClass
         return $randomString;
     }
 
-    /**
-     * @return int l'id en bdd du user
-     */
-    private function getUserId(){
-        require("./modele/connect.php");
 
-        $sql = "SELECT id FROM client WHERE email=:email";
-
-        try{
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':email', $this->email, PDO::PARAM_STR);
-
-            if (!$stmt->execute())
-                die  ("Echec de requête SQL 1\n");
-            else
-                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
-        }catch(PDOException $e){
-            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
-        }
-
-        return $resultat[0]["id"];
-    }
 
     /**
      * Détermine si l'utilisateur peut se connecter
      * @return bool true si le user existe et peut se connecter car login + pw corrects, false dans le cas contraire
      */
     private function userCanConnect(){
+        if (!isset($this->email) || !isset($this->pw))
+            return false;
+
         require("./modele/connect.php");
 
         // hash pw
@@ -123,6 +106,8 @@ class LoginClass
         }
 
         //var_dump($resultat[0]["password"]); die();
+        if (empty($resultat))
+            return false;
 
         $this->userAuth = password_verify($this->pw, $resultat[0]["password"]);
 

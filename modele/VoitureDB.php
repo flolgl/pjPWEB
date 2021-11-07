@@ -98,4 +98,40 @@ class VoitureDB{
         return true;
     }
 
+    public static function getCatalogueOfLoueur($email, $stockCar, $rentedCar){
+        require("./modele/connect.php");
+
+        $sql = VoitureDB::getUserChoiceOfShowing($stockCar, $rentedCar);
+        if (empty($sql))
+            return array();
+
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+        return $resultat;
+    }
+
+    private static function getUserChoiceOfShowing($stockCar, $rentedCar){
+        if ($stockCar && $rentedCar) // montrer toutes les voitures
+            return "SELECT voiture.* FROM voiture, client WHERE client.email = :email AND voiture.idLoueur = client.id";
+
+        if (!$stockCar && $rentedCar) // montrer seulement les voitures louées
+            return "SELECT voiture.* FROM voiture, location, client WHERE location.idVoiture = voiture.id AND voiture.idLoueur = client.id AND client.email = :email";
+
+        if ($stockCar && !$rentedCar) // montrer seulement les voitures en stock
+            return "SELECT voiture.* FROM voiture, client WHERE client.email = :email AND voiture.idLoueur = client.id AND voiture.id NOT IN(SELECT location.idVoiture FROM location)";
+
+        return ""; // Ne rien montrer
+
+
+    }
+
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ILoueUnaWagen</title>
+</head>
+<body>
+
+    <?php require("./vue/navbar.html"); ?>
+
+    <div class="mt-5">
+        <div class="row mx-2">
+            <div class="col-lg-8">
+                <div class="card wish-list mb-4">
+                    <div class="card-body">
+                        <h5 class="mb-4">
+                            Véhicule(s) loué(s) :
+                            <?php echo count($cars);?>
+                        </h5>
+                        <?php
+                            $i = 0;
+                            foreach($cars as $a){
+                                require("./vue/components/selectionCar.html");
+                                $i++;
+                                if ($i !== count($cars))
+                                    echo '<hr class="mb-4">';
+                        }
+                        ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<style>
+
+
+</style>
+</html>

@@ -54,8 +54,11 @@
                 <?php
                     if (!isset($_SESSION["login"]))
                         echo '<a class="mx-2" href="./index.php?controle=User&action=renderProfile"> <i class="fas fa-user"></i> </a>';
-                    else
+                    else{
+                        echo '<a class="mx-2" href="./index.php?controle=User&action=renderAllLocationsOfUser"> <i class="fas fa-car"></i> </a>';
                         echo '<a class="mx-2" href="./index.php?controle=User&action=disconnect"> <i class="fas fa-sign-out-alt"></i> </a>';
+                    }
+
                 ?>
 
             </div>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+date_default_timezone_set('UTC');
 
 //hypothèse 2 paramètres d'entrée, controle et action, avec l'url de index.php
 // exmple : index.php?controle=c1&action=a12
