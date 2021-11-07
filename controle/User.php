@@ -46,6 +46,8 @@ class User{
         else
             $cars = LocationDB::getAllLocationsOfUser(UserDB::getUserMail($_GET["idE"]));
 
+        $mois = LocationDB::getAllMonth();
+
         $choiceEntreprise = $this->getEntrepriseName(isset($_GET["idE"]) ? $_GET["idE"] : -1, $entreprise);
         $prixTotal = 0;
 
@@ -230,12 +232,26 @@ class User{
         $loueur = true;
 
         require("./vue/factureLocation.html");
-
-
     }
 
-    private function getFacturation(){
+    public function getFactureOfMonth(){
+        if (!User::isUserLoggedIn())
+            return self::redirectUserToLoginAndDisconnect();
+        if (!isset($_GET["month"]) || !isset($_GET["year"]) || !is_numeric($_GET["month"]) || !is_numeric($_GET["year"]))
+            return header("Location: index.php?controle=User&action=renderAllLocationsOfUser");
 
+        require_once("./modele/LocationDB.php");
+        require_once("./modele/UserDB.php");
+        $locationInfo = LocationDB::getAllFactureOfLoueurByMonth(UserDB::getUserId($_SESSION["login"]), $_GET["month"], $_GET["year"]);
+
+        if (empty($locationInfo))
+            return header("Location: index.php?controle=User&action=renderAllLocationsOfUser");
+        $total = 0;
+        foreach ($locationInfo as $item)
+            $total += $item["total"];
+        $loueur = true;
+
+        require("./vue/factureLocation.html");
     }
 
 

@@ -95,6 +95,28 @@
                         </ul>
 
                         <a href="./index.php?controle=User&action=getAllFacturesOfLoueur"><button type="button" class="btn btn-primary btn-block waves-effect waves-light">Facture par entreprise</button></a>
+                        <div class="d-flex justify-content-center align-items-center mt-2"
+
+                            <div class="dropdown">
+                                <a
+                                        class="btn btn-primary dropdown-toggle"
+                                        href="#"
+                                        role="button"
+                                        id="dropdownMenuLink"
+                                        data-mdb-toggle="dropdown"
+                                        aria-expanded="false"
+                                >
+                                    Choisir un mois
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <?php foreach($mois as $k => $v)
+                                        echo "<li><a class='dropdown-item' href='./index.php?controle=User&action=getFactureOfMonth&month=".$v['m']."&year=".$v['y']."'>".$v['m']."/".$v['y']."</a></li>";
+
+                                    ?>
+                                </ul>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -113,6 +135,7 @@
         position: sticky;
         top: 20px;
     }
+
 
 </style>
 <script>

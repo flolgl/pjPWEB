@@ -119,4 +119,52 @@ class LocationDB{
         }
         return $resultat;
     }
+
+    public static function getAllFactureOfLoueurByMonth($loueurId, $month, $year){
+        require("./modele/connect.php");
+
+        $sql = "SELECT v.type, v.plaque, v.type, l.idLoc, u.nomEntreprise AS nom, l.prixJour, l.prixJour*DATEDIFF(l.tFin, l.tDebut) AS total, DATEDIFF(l.tFin, l.tDebut) as duree FROM location AS l, voiture AS v, user AS u WHERE v.idLoueur = :idLoueur AND v.id = l.idVoiture AND l.idClient = u.id AND MONTH(l.payDate) = :mois AND YEAR(l.payDate) = :annee";
+        $sql2 = "SELECT v.type, v.plaque, v.type, l.idLoc, u.nomEntreprise AS nom, l.prixJour, l.prixJour*DATEDIFF(l.tFin, l.tDebut) AS total, DATEDIFF(l.tFin, l.tDebut) as duree FROM locationhistory AS l, voiture AS v, user AS u WHERE v.idLoueur = :idLoueur AND v.id = l.idVoiture AND l.idClient = u.id AND MONTH(l.payDate) = :mois AND YEAR(l.payDate) = :annee";
+
+        $factures = self::getAllFactureFromMonth($sql, $month, $year, $loueurId);
+        $facturesHistory = self::getAllFactureFromMonth($sql2, $month, $year, $loueurId);
+
+        foreach ($facturesHistory as $k=>$v)
+            $factures[] = $v;
+
+        return $factures;
+    }
+
+    private static function getAllFactureFromMonth($sql, $month, $year, $loueurId){
+        require("./modele/connect.php");
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':idLoueur', $loueurId, PDO::PARAM_STR);
+            $stmt->bindParam(':mois', $month, PDO::PARAM_STR);
+            $stmt->bindParam(':annee', $year, PDO::PARAM_STR);
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                $resultat= $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+        return $resultat;
+    }
+
+    public static function getAllMonth(){
+        require("./modele/connect.php");
+        $sql="SELECT MONTH(payDate) AS m, YEAR(payDate) as y FROM location UNION SELECT MONTH(payDate) AS m, YEAR(payDate) as y FROM locationhistory ORDER BY `m`, `y` ASC";
+
+        try{
+            $stmt = $pdo->prepare($sql);
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                $resultat= $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+        return $resultat;
+    }
 }
