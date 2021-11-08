@@ -19,8 +19,11 @@ class User{
             $user = new LoginClass($profil["email"], $profil["pw"]);
             $cookie = $user->connectUser();
             if($cookie != null){
+                require_once("./modele/UserDB.php");
                 $_SESSION["uAuth"] = $cookie;
                 $_SESSION["login"] = $profil["email"];
+                $_SESSION["group"] = UserDB::getGroup($profil["email"]);
+
                 header("Location: ./index.php");
             }
             else
@@ -110,7 +113,7 @@ class User{
         return isset($_SESSION["login"]) && isset($_SESSION["uAuth"]) && UserDB::isAuthOk($_SESSION["login"], $_SESSION["uAuth"]);
     }
 
-    private static function redirectUserToLoginAndDisconnect(){
+    public static function redirectUserToLoginAndDisconnect(){
         $_SESSION["login"] = null; $_SESSION["uAuth"] = null;
         header("Location: index.php?controle=User&action=renderProfile");
     }
@@ -153,6 +156,7 @@ class User{
                 if($cookie != null) {
                     $_SESSION["uAuth"] = $cookie;
                     $_SESSION["login"] = $profil["email"];
+                    $_SESSION["group"] = 0;
                     header("Location: ./index.php");
                 }
             }

@@ -1,17 +1,35 @@
 <?php
 
-class Admin
+class Loueur
 {
 
     private $res = "";
 
+    /**
+     * Permet l'affichage de la vue du form d'ajout d'une voiture
+     */
     public function renderAddCar(){
+        require("./controle/User.php");
+        if (!Loueur::isLoueurAndLoggedIn())
+            return User::redirectUserToLoginAndDisconnect();
         $res = $this->res;
         $car = $this->getPostInfo();
         $carNames = $this->getVoituresNamesAndPhotoNamesMap();
         require("./vue/ajoutVoitures.html");
     }
 
+    /**
+     * @return bool true si user est loueur et connecté, false dans le cas contraire
+     */
+    private function isLoueurAndLoggedIn(){
+        require_once("./modele/UserDB.php");
+        return isset($_SESSION["login"]) && isset($_SESSION["uAuth"]) && UserDB::isAuthOk($_SESSION["login"], $_SESSION["uAuth"])
+            && UserDB::getGroup($_SESSION["login"]) == 1;
+    }
+
+    /**
+     * @return array Tab composé de clés => nom de la voiture et de valeurs => nom de la photo. Ajouter .webp !
+     */
     private function getVoituresNamesAndPhotoNamesMap(){
         require_once("./modele/VoitureDB.php");
         $carNames = VoitureDB::getAllVoituresNamesAndPhotoName();
@@ -23,10 +41,17 @@ class Admin
 
     }
 
+    /**
+     * Fonction permettant d'ajouter une voiture en DB
+     */
     public function addVoiture(){
+        if (!Loueur::isLoueurAndLoggedIn()){
+            require("./controle/User.php");
+            return User::redirectUserToLoginAndDisconnect();
+        }
+
         require_once("./modele/VoitureDB.php");
         $car = $this->getPostInfo();
-
         if (!$this->isCarInfoFilled($car)) {
             $this->res = "Il est indispensable de remplir tous les champs";
         } else if (!is_numeric($car["carPrice"]) || !is_numeric($car["carPlaces"]) || !is_numeric($car["carPortes"])) {
@@ -35,11 +60,13 @@ class Admin
             $this->res = "Le format de la plaque est mauvais";
         } else if (VoitureDB::doesVoitureExists($car["carPlate"])) {
             $this->res = "Voiture déjà existante en base de données";
-        } else if (!$this->isImageValid($car["carImage"])){
+        } else if (!$this->isImageValid($car["carImage"], $car["carImageUpload"])){
             $this->res = "L'image de la voiture n'est pas au bon format";
         } else {
             $tab = $this->getJsonTableFromCar($car);
-            if (VoitureDB::insertNewVoiture($car, $tab)) {
+            require_once("./modele/UserDB.php");
+            if (VoitureDB::insertNewVoiture($car, $tab, UserDB::getUserId($_SESSION["login"]))) {
+                $this->moveImageIfNecessary($car["carImage"], $car["carImageUpload"]);
                 header("Location: ./index.php");
                 return;
             } else {
@@ -50,19 +77,46 @@ class Admin
 
     }
 
-    private function isImageValid($image){
-
-        imagewebp($image,'image.webp');
-    
-        $matches=preg_match('/(webp)$/i', $image, $tabMatches);
-        if ($matches==0) return false;
-        /* Faut definrir une taille max si on veut 
-        $max = 1000;
-        if (filesize($image) >$max) return false;
-        */
-        return true;
+    /**
+     * Détermine si nécessité d'upload l'image
+     * @param $image string l'input du menu déroulant
+     * @param $imageUpload array l'image de l'input file
+     */
+    private function moveImageIfNecessary($image, $imageUpload){
+        if($image !== "noImage" && !empty($image))
+            return;
+        else
+            move_uploaded_file($imageUpload["tmp_name"], "./img/".$imageUpload['name']);
     }
 
+    /**
+     * @param $image string l'input du menu déroulant
+     * @param $imageUpload array l'image de l'input file
+     * @return bool true si l'image est valide
+     */
+    private function isImageValid($image, $imageUpload){
+        //var_dump($image, $imageUpload);
+        if(($image === "noImage" || empty($image)) && empty($imageUpload))
+            return false;
+
+        if($image !== "noImage" && !empty($image)) {
+            require_once("./modele/VoitureDB.php");
+            return VoitureDB::doesImageExists($image);
+        }
+        else{
+            $tabExtension = explode('.', $imageUpload["name"]);
+            $extension = strtolower(end($tabExtension));
+            $extensions = ["webp", "jpeg", "jpg", "png"];
+            return in_array($extension, $extensions);
+        }
+
+
+    }
+
+    /**
+     * @param $car array tab à JSONifié
+     * @return false|string le tab JSONifié
+     */
     private function getJsonTableFromCar($car){
         $tab = array();
         $tab["climatisation"] = $car["carClim"];
@@ -75,6 +129,9 @@ class Admin
         return json_encode($tab);
     }
 
+    /**
+     * @return array Les inputs du form
+     */
     private function getPostInfo(){
         $car = array();
         $car["carClim"] = isset($_POST["carClim"]);
@@ -89,26 +146,32 @@ class Admin
         $car["carPlaces"] = isset($_POST["carPlaces"]) ? $_POST["carPlaces"] : "";
         $car["carPortes"] = isset($_POST["carPortes"]) ? $_POST["carPortes"] : "";
 
-        if (isset($_POST["carImage"]) && $_POST["carImage"] !== "noImage")
-            $car["carImage"] = $_POST["carImage"];
-        else
-            $car["carImage"] = isset($_POST["carImageUpload"]) ? $_POST["carImageUpload"] : "";
+        $car["carImage"] = isset($_POST["carImage"]) ? $_POST["carImage"] : "";
+        $car["carImageUpload"] = isset($_FILES["carImageUpload"]) ? $_FILES["carImageUpload"] : null;
 
         return $car;
     }
 
+    /**
+     * @param $plaque string L'input mis dans le champs plaque
+     * @return false|int true si la plaque est au bon format
+     */
     private function isPlaquePattern($plaque){
         $plaque = strtoupper($plaque);
         $pattern = "[[0-9][0-9]-[A-Z][A-Z][A-Z]-[0-9][0-9]]";
         return preg_match($pattern, $plaque);
     }
 
+    /**
+     * @param $car array tab des inputs
+     * @return bool true si tous les champs sont remplis
+     */
     private function isCarInfoFilled($car){
         $res = true;
 
 
         foreach($car as $key => $value){
-            if($key === "carClim" || $key === "carVitesse")
+            if($key === "carClim" || $key === "carVitesse" || $key === "carImage" || $key==="carImageUpload")
                 continue;
 
             if (empty($value))

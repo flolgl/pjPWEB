@@ -7,15 +7,15 @@
 <body>
     <div class="cardContainer">
         <div class="carCard">
-            <img class="carImg" src="<?php echo "./img/" . $v["photo"] . ".webp"; ?>"/>
+            <img class="carImg" src="<?php echo "./img/" . $v["photo"]; ?>"/>
         </div>
         <div>
             <h3 class="title"><?php echo $v["type"];?></h3>
-            <p class="text muted small">Sportive</p>
+            <p class="text muted small">Prestataire: <?php echo $v["nomEntreprise"];?></p>
             <div class="dFlex">
                 <hr>
             </div>
-            <p class="price">120€</p>
+            <p class="price"><?php echo $v["prix"];?>€</p>
             <form method="POST" action=<?php echo "./index.php?controle=Voiture&action=addToPanier&voitureId=" . $v["id"]; ?>>
                 <input class="btn btn-primary btn-sm mr-1 mb-2 waves-effect waves-light" type="submit"
                     value ='Ajouter au panier'

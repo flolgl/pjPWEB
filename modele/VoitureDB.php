@@ -5,7 +5,7 @@ class VoitureDB{
     public static function getVoituresDispo(){
         require("./modele/connect.php");
 
-        $sql = "SELECT * FROM voiture WHERE etatL='disponible'";
+        $sql = "SELECT voiture.id, voiture.type, voiture.prix, voiture.photo, u.nomEntreprise FROM voiture, user AS u WHERE u.id = voiture.idLoueur AND etatL='disponible'";
         try{
             $stmt = $pdo->prepare($sql);
             if (!$stmt->execute())
@@ -15,7 +15,6 @@ class VoitureDB{
         }catch(PDOException $e){
             die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
         }
-
         return $resultat;
     }
 
@@ -75,19 +74,25 @@ class VoitureDB{
         return !empty($resultat);
     }
 
-    public static function insertNewVoiture($car, $json){
+    public static function insertNewVoiture($car, $json, $idL){
         require("./modele/connect.php");
 
+        var_dump($car, $json, $idL);
 
-        $sql = "INSERT INTO voiture (type, caract, photo, plaque, etatL, prix) VALUES (:carName, :caract, :photo, :plaque, :etatL, :prix)";
+        $sql = "INSERT INTO voiture (type, caract, photo, plaque, etatL, prix, idLoueur) VALUES (:carName, :caract, :photo, :plaque, :etatL, :prix, :idL)";
         try{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':carName', $car["carName"], PDO::PARAM_STR);
             $stmt->bindParam(':caract', $json, PDO::PARAM_STR);
-            $stmt->bindParam(':photo', $car["carImage"], PDO::PARAM_STR);
+            if ($car["carImage"] !== "noImage" && $car["carImage"])
+                $stmt->bindParam(':photo', $car["carImage"], PDO::PARAM_STR);
+            else
+                $stmt->bindParam(':photo', $car["carImageUpload"]["name"], PDO::PARAM_STR);
+
             $stmt->bindParam(':plaque', $car["carPlate"], PDO::PARAM_STR);
             $stmt->bindParam(':etatL', $car["carEtat"], PDO::PARAM_STR);
             $stmt->bindParam(':prix', $car["carPrice"], PDO::PARAM_STR);
+            $stmt->bindParam(':idL', $idL, PDO::PARAM_STR);
 
             if (!$stmt->execute())
                 die  ("Echec de requête SQL \n");
@@ -134,4 +139,22 @@ class VoitureDB{
 
     }
 
+    public static function doesImageExists($image){
+        require("./modele/connect.php");
+
+        $sql = "SELECT photo FROM voiture WHERE photo=:image";
+
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':image', $image, PDO::PARAM_STR);
+
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+        return !empty($resultat);
+    }
 }
