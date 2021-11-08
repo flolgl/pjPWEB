@@ -53,7 +53,7 @@ class VoitureDB{
     public static function getVoituresDispo(){
         require("./modele/connect.php");
 
-        $sql = "SELECT voiture.id, voiture.type, voiture.prix, voiture.photo, u.nomEntreprise FROM voiture, user AS u WHERE u.id = voiture.idLoueur AND etatL='disponible'";
+        $sql = "SELECT voiture.id, voiture.type, voiture.prix, voiture.photo, u.nomEntreprise FROM voiture, user AS u WHERE u.id = voiture.idLoueur AND etatL='disponible' AND voiture.id NOT IN (SELECT location.idVoiture FROM location)";
         try{
             $stmt = $pdo->prepare($sql);
             if (!$stmt->execute())
@@ -205,4 +205,50 @@ class VoitureDB{
         }
         return !empty($resultat);
     }
+
+    /**
+     * @param $vId int l'id du véhicule
+     * @return float le prix
+     */
+    public static function getPrix($vId){
+        require("./modele/connect.php");
+
+        $sql = "SELECT prix FROM voiture WHERE id=:id";
+
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':id', $vId, PDO::PARAM_STR);
+
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+        return $resultat[0]["prix"];
+    }
+
+
+
+    public static function isVoitureDispo($vId){
+        require("./modele/connect.php");
+
+        $sql = "SELECT etatL FROM voiture WHERE id=:id";
+
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':id', $vId, PDO::PARAM_STR);
+
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+        return !empty($resultat) && $resultat[0]["etatL"] === "disponible";
+    }
+
+
 }

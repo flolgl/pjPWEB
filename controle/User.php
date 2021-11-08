@@ -108,7 +108,7 @@ class User{
         header("Location: ./index.php?controle=User&action=renderAllLocationsOfUser");
     }
 
-    private static function isUserLoggedIn(){
+    public static function isUserLoggedIn(){
         require("./modele/UserDB.php");
         return isset($_SESSION["login"]) && isset($_SESSION["uAuth"]) && UserDB::isAuthOk($_SESSION["login"], $_SESSION["uAuth"]);
     }
@@ -132,6 +132,9 @@ class User{
         $profil["prenom"] = isset($_POST["prenom"]) ? $_POST["prenom"] : "";
         $profil["pw"] = isset($_POST["pw"]) ? $_POST["pw"] : "";
         $profil["pwConfirm"] = isset($_POST["pwConfirm"]) ? $_POST["pwConfirm"] : "";
+        $profil["nomEntreprise"] = isset($_POST["nomEntreprise"]) ? $_POST["nomEntreprise"] : "";
+        $profil["codePostal"] = isset($_POST["codePostal"]) ? $_POST["codePostal"] : "";
+
         return $profil;
     }
 
@@ -257,6 +260,7 @@ class User{
 
         require("./vue/factureLocation.html");
     }
+
 
 
 }

@@ -27,7 +27,7 @@ class LocationDB{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':idLoc', $idLoc, PDO::PARAM_STR);
             if (!$stmt->execute())
-                die  ("Echec de requête SQL \n");
+                die  ("Echec de requête SQL ICI\n");
             else
                 $result = ($stmt->fetchAll(PDO::FETCH_ASSOC)); //tableau d'enregistrements
         }catch(PDOException $e){
@@ -38,16 +38,19 @@ class LocationDB{
     public static function removeCarFromLocation($idLoc){
         require("./modele/connect.php");
 
+        var_dump($idLoc);
         self::updateLocationFinDate($idLoc);
 
-        $sql = "DELETE FROM location WHERE location.idLoc = :idLoc"; //Trigger s'occupe de mettre en table historique
+        $sql = "DELETE FROM `location` WHERE `location`.`idLoc` = :idLoc"; //Trigger s'occupe de mettre en table historique
         try{
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':idLoc', $idLoc, PDO::PARAM_STR);
-            if (!$stmt->execute())
-                die  ("Echec de requête SQL \n");
+            $stmt->bindParam(":idLoc", $idLoc, PDO::PARAM_STR);
+
+            var_dump($stmt->execute());
+            if ($stmt->execute())
+                echo 'Suppression done';
             else
-                return empty($stmt->fetchAll(PDO::FETCH_ASSOC)); //tableau d'enregistrements
+                die("error");
         }catch(PDOException $e){
             die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
         }
@@ -166,5 +169,59 @@ class LocationDB{
             die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
         }
         return $resultat;
+    }
+
+
+    public static function isVoitureLouee($vId){
+        require("./modele/connect.php");
+
+        $sql = "SELECT idLoc FROM location WHERE idVoiture=:id";
+
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':id', $vId, PDO::PARAM_STR);
+
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL idVoitureLoue\n");
+            else
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+        return !empty($resultat);
+    }
+
+
+    public static function louerVoiture($vId, $cId, $debut, $fin, $payDate){
+        require_once("./modele/VoitureDB.php");
+        if (!VoitureDB::isVoitureDispo($vId) || self::isVoitureLouee($vId))
+            return;
+
+        require("./modele/connect.php");
+        $debut = strtotime($debut);
+        $debut = date('Y-m-d',$debut);
+
+        $fin = strtotime($fin);
+        $fin = date('Y-m-d',$fin);
+
+        $sql = "INSERT INTO location (idLoc, idVoiture, idClient, tDebut, tFin, prixJour, payDate) VALUES (DEFAULT, :vId, :cId, :tDebut, :tFin, :prixJour, current_date)";
+        $prix = VoitureDB::getPrix($vId);
+        var_dump($vId, $cId, $debut, $fin, $payDate, $prix);
+
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':vId', $vId, PDO::PARAM_STR);
+            $stmt->bindParam(':cId', $cId, PDO::PARAM_STR);
+            $stmt->bindParam(':tDebut', $debut, PDO::PARAM_STR);
+            $stmt->bindParam(':tFin', $fin, PDO::PARAM_STR);
+            $stmt->bindParam(':prixJour', $prix, PDO::PARAM_STR);
+
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                return;
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
     }
 }

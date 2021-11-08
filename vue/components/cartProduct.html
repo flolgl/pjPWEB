@@ -27,7 +27,7 @@
 
                     <div>
                         <p class="mb-2 text-muted text-uppercase small">Moteur: <?php echo $a["caract"]["moteur"]; ?></p>
-                        <p class="mb-2 text-muted text-uppercase small">Boîte: <?php echo $a["caract"]["vitesse"]; ?></p>
+                        <p class="mb-2 text-muted text-uppercase small">Boîte: <?php echo $a["caract"]["vitesse"] ? "Automatique" : "Manuelle"; ?></p>
                         <p class="mb-2 text-muted text-uppercase small">Climatisation: <?php echo $a["caract"]["climatisation"] ? "Oui" : "Non"; ?></p>
                         <p class="mb-2 text-muted text-uppercase small">Portes: <?php echo $a["caract"]["portes"]; ?></p>
                     </div>

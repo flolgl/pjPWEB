@@ -63,19 +63,23 @@ class UserDB{
 
     }
 
-    public static function insertUserIntoBdd($profil){
+    public static function insertUserIntoBdd($profil, $group = à){
         require("./modele/connect.php");
         $hashedPassword = password_hash($profil["pw"], PASSWORD_DEFAULT);
+        var_dump($group);
 
-        $sql = "INSERT INTO user (nom, prenom, password, email) VALUES (:nom, :prenom, :pw, :email)";
+            $sql = "INSERT INTO user (nom, prenom, nomEntreprise, codePostal, password, email, groupe) VALUES (:nom, :prenom, :nomEntreprise, :codePostal, :pw, :email, :groupe)";
         try{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':pw', $hashedPassword, PDO::PARAM_STR);
             $stmt->bindParam(':nom', $profil["nom"], PDO::PARAM_STR);
+            $stmt->bindParam(':nomEntreprise', $profil["nomEntreprise"], PDO::PARAM_STR);
+            $stmt->bindParam(':codePostal', $profil["codePostal"], PDO::PARAM_STR);
             $stmt->bindParam(':prenom', $profil["prenom"], PDO::PARAM_STR);
             $stmt->bindParam(':email', $profil["email"], PDO::PARAM_STR);
+            $stmt->bindParam(':groupe', $group, PDO::PARAM_STR);
             if (!$stmt->execute())
-                die  ("Echec de requête SQL \n");
+                die  ("Echec de requête SQL ICI\n");
         }catch(PDOException $e){
             die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
         }
