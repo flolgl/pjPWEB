@@ -12,7 +12,7 @@ class Admin{
 
     public function processAddLoueur(){
         $profil = $this->getPostInfo();
-        require("./controle/FormValidation.php");
+        require("./controle/utils/FormValidation.php");
         if (FormValidation::areInputFilled($profil))
             $this->res = "Il est indispensable de tout remplir";
         else if (FormValidation::isEmailRight($profil["email"]) || FormValidation::isEmailRight($profil["mailEntreprise"]))

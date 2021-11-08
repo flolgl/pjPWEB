@@ -34,7 +34,7 @@
 
                       <div class="form-outline mb-4">
                         <input type="text" id="nomEntrepriseInput" onfocusout="inputVerif()" name="nomEntreprise" class="form-control form-control-lg"  value="<?php echo $profil['nomEntreprise']; ?>"/>
-                        <label class="form-label" for="nomEntrepriseInput">Prénom</label>
+                        <label class="form-label" for="nomEntrepriseInput">Nom de l'entreprise</label>
                       </div>
                       <div class="form-outline mb-4">
                         <input type="text" id="codePostalInput" onfocusout="inputVerif()" name="codePostal" class="form-control form-control-lg"  value="<?php echo $profil['codePostal']; ?>"/>
@@ -55,18 +55,7 @@
                         <input type="password" id="pwConfirm" onfocusout="inputVerif()" name="pwConfirm" class="form-control form-control-lg" />
                         <label class="form-label" for="pwConfirm">Répeter votre mot de passe</label>
                       </div>
-      
-                      <div class="form-check d-flex justify-content-center mb-3">
-                        <input
-                          class="form-check-input me-2"
-                          type="checkbox"
-                          value=""
-                          id="checkButton"
-                        />
-                        <label class="form-check-label" for="checkButton">
-                          Accepter toutes les <a href="#!" class="text-body"><u>conditions d'utilisation</u></a>
-                        </label>
-                      </div>
+
                       <div class="d-flex justify-content-center">
                         <p class="errorText"><?php echo $res; ?> </p>
                       </div>
@@ -83,15 +72,11 @@
             <div class="footer-link pt-5 d-flex justify-content-center">
               <div class="d-flex justify-content-center align-items-center flex-column">
                 <span>Vous possédez un compte ? <a href="./index.php?controle=User&action=renderLogin">Se connecter</a></span>
-                <div class="listing d-flex justify-content-center align-items-center">
-                  <span><a href="#">© Stackfindover</a></span>
-                  <span><a href="#">Contact</a></span>
-                  <span><a href="#">Privacy & terms</a></span>
-                </div>
               </div>
             </div>
           </div>
-      </section>
+    </section>
+    <?php require("./vue/footer.html"); ?>
 
 
 

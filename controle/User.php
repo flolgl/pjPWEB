@@ -9,17 +9,17 @@ class User{
     }
 
     public function processLogin(){
-        include "./controle/FormValidation.php";
-        require ("./modele/LoginClass.php");
+        require_once("./controle/utils/FormValidation.php");
+        require_once("./modele/UserDB.php");
         $profil = $this->getLoginPostInfo();
 
         if (!FormValidation::areInputFilled($profil) || !FormValidation::isEmailRight($profil["email"]))
             $this->res = "Il est indispensable de remplir correctement tous les champs";
         else {
-            $user = new LoginClass($profil["email"], $profil["pw"]);
+            $user = new UserDB($profil["email"], $profil["pw"]);
+
             $cookie = $user->connectUser();
             if($cookie != null){
-                require_once("./modele/UserDB.php");
                 $_SESSION["uAuth"] = $cookie;
                 $_SESSION["login"] = $profil["email"];
                 $_SESSION["group"] = UserDB::getGroup($profil["email"]);
@@ -139,9 +139,8 @@ class User{
     }
 
     public function processRegister(){
-        include "./controle/FormValidation.php";
+        include "./controle/utils/FormValidation.php";
         require_once("./modele/UserDB.php");
-        require ("./modele/LoginClass.php");
 
         $profil = $this->getRegisterPostInfo();
         //var_dump($profil);
@@ -154,7 +153,7 @@ class User{
             $this->res = "Utilisateur déjà existant";
         else {
             if (UserDB::insertUserIntoBdd($profil)){
-                $user = new LoginClass($profil["email"], $profil["pw"]);
+                $user = new UserDB($profil["email"], $profil["pw"]);
                 $cookie = $user->connectUser();
                 if($cookie != null) {
                     $_SESSION["uAuth"] = $cookie;

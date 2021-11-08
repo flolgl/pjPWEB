@@ -19,7 +19,7 @@ if (isset($_GET['controle']) && isset($_GET['action'])) {
 // c1 = nom du fichier
 // a11 = nom de la fonction
 if (!file_exists("./controle/$controle.php")) {
-    echo "file not exist" . $controle;die();
+    echo "Erreur 404 " . $controle;die();
     $controle = "Voiture";
     $action = "renderCatalogueVoitures";
 }
