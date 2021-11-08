@@ -35,7 +35,7 @@
                             </a>
 
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <?php foreach($entreprise as $k => $v)
+                                <?php foreach($entreprises as $k => $v)
                                     echo "<li><a class='dropdown-item' href='./index.php?controle=User&action=renderAllLocationsOfUser&stockCar=true&rentedCar=true&idE=".$v['id']."'>".$v['nom']."</a></li>";
 
                                 ?>

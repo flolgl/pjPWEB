@@ -7,6 +7,23 @@ class Voiture{
         require("./vue/accueil.html");
     }
 
+    public function setDispo(){
+
+        if (!isset($_GET["voitureId"]))
+            return header("Location: ./index.php?controle=User&action=renderAllLocationsOfUser");
+
+        require_once("./modele/UserDB.php");
+        if (!(isset($_SESSION["login"]) && isset($_SESSION["uAuth"]) && UserDB::isAuthOk($_SESSION["login"], $_SESSION["uAuth"]))
+            || !UserDB::getGroup($_SESSION["login"])){
+            require_once("./controle/User.php");
+            return User::redirectUserToLoginAndDisconnect();
+        }
+
+        require("./modele/VoitureDB.php");
+        VoitureDB::setDispo($_GET["voitureId"]);
+        header("Location: index.php?controle=User&action=renderAllLocationsOfUser");
+    }
+
     public function renderCarDetails(){
         require("./modele/VoitureDB.php");
 
@@ -28,7 +45,4 @@ class Voiture{
         $this->renderCatalogueVoitures();
     }
 
-    public function vardPanier(){
-        var_dump($_SESSION["panier"]); die();
-    }
 }

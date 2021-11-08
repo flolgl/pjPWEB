@@ -88,7 +88,7 @@ class LocationDB{
     public static function getAllClientsOfLoueur($idLoueur){
         require("./modele/connect.php");
 
-        $sql = "SELECT DISTINCT cli.nom, cli.id FROM user AS cli, location AS l, voiture AS v WHERE v.idLoueur = :idLoueur AND l.idVoiture = v.id AND cli.id = l.idClient";
+        $sql = "SELECT DISTINCT cli.nomEntreprise as nom, cli.id FROM user AS cli, location AS l, voiture AS v WHERE v.idLoueur = :idLoueur AND l.idVoiture = v.id AND cli.id = l.idClient";
         try{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':idLoueur', $idLoueur, PDO::PARAM_STR);

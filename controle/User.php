@@ -42,7 +42,7 @@ class User{
         require("./modele/LocationDB.php");
         //var_dump($stockCar, $rentedCar);
         $choiceEntreprise = "";
-        $entreprise = LocationDB::getAllClientsOfLoueur(UserDB::getUserId($_SESSION["login"]));
+        $entreprises = LocationDB::getAllClientsOfLoueur(UserDB::getUserId($_SESSION["login"]));
 
         if (!(isset($_GET["idE"]) && is_numeric($_GET["idE"])) || !UserDB::doesUserExistsWithId($_GET["idE"]))
             $cars = VoitureDB::getCatalogueOfLoueur($_SESSION["login"], $stockCar, $rentedCar);
@@ -51,7 +51,7 @@ class User{
 
         $mois = LocationDB::getAllMonth();
 
-        $choiceEntreprise = $this->getEntrepriseName(isset($_GET["idE"]) ? $_GET["idE"] : -1, $entreprise);
+        $choiceEntreprise = $this->getEntrepriseName(isset($_GET["idE"]) ? $_GET["idE"] : -1, $entreprises);
         $prixTotal = 0;
 
 

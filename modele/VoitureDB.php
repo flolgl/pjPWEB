@@ -2,6 +2,54 @@
 
 class VoitureDB{
 
+    public static function setDispo($voitureId){
+
+        $dispo = self::getDispoState($voitureId);
+
+        if (!isset($dispo))
+            return;
+
+        if ($dispo[0]["etatL"] === "disponible")
+            $etat = "revision";
+        else
+            $etat = "disponible";
+
+        require("./modele/connect.php");
+
+        $sql = "UPDATE voiture SET etatL = :etat WHERE id = :id";
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':id', $voitureId, PDO::PARAM_STR);
+            $stmt->bindParam(':etat', $etat, PDO::PARAM_STR);
+
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+        return $resultat;
+    }
+
+    public static function getDispoState($voitureId){
+        require("./modele/connect.php");
+
+        $sql="SELECT etatL FROM voiture WHERE id=:id";
+
+        try{
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':id', $voitureId, PDO::PARAM_STR);
+            if (!$stmt->execute())
+                die  ("Echec de requête SQL \n");
+            else
+                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+        }catch(PDOException $e){
+            die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
+        }
+        return $resultat;
+    }
+
     public static function getVoituresDispo(){
         require("./modele/connect.php");
 

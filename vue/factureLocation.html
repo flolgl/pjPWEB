@@ -28,9 +28,15 @@
           <div class="coordonnesContainer">
               <div class="coordonneesClient">
 
-                  <div>
-                    <span>A: </span>
-                    <span style="color: #3279a8;"><?php echo $locationInfo[0]["prenom"] . " " . strtoupper($locationInfo[0]["nom"]); ?></span>
+                  <?php
+                  if ($loueur)
+                    echo "<div style='display:none'>";
+                  else
+                    echo "<div>";
+                  ?>
+
+                      <span>A: </span>
+                      <span style="color: #3279a8;"><?php echo $locationInfo[0]["nom"]; ?></span>
                   </div>
               </div>
               <div class="statutInvoice">
@@ -56,14 +62,20 @@
                           <th scope="col">#</th>
                           <th scope="col">Description</th>
                           <th scope="col">Plaque</th>
+                          <?php if ($loueur) echo "<th scope='col'>Nom client</th>"; ?>
                           <th scope="col">Durée</th>
                           <th scope="col">Prix par jour</th>
                           <th scope="col">Total</th>
                       </tr>
                   </thead>
                   <tbody>
-                  <?php foreach($locationInfo as $key => $value)
-                    echo "<tr> <th score='row'>$key</th> <td>".$value['type']."</td> <td>".$value['plaque']."</td> <td>".$value['type']."</td> <td>".$value['prixJour']."</td> <td>".$value['total']."</td></tr>";
+                  <?php
+                  foreach($locationInfo as $key => $value){
+                  echo "<tr> <th score='row'>$key</th> <td>".$value['type']."</td> <td>".$value['plaque']."</td>";
+                      if($loueur)
+                      echo "<td>".$value['nom']."</td>";
+                      echo "<td>".$value['duree']." jour(s)</td> <td>".$value['prixJour']."€</td> <td>".$value['total']."€</td></tr>";
+                  }
                   ?>
                   </tbody>
 
@@ -87,7 +99,13 @@
               </div>
           </div>
           <hr>
-          <div class="infoContainer">
+          <?php
+          if ($loueur)
+            echo '<div class="infoContainer" style="display:none">';
+          else
+            echo '<div class="infoContainer">';
+          ?>
+
             <p>Nous vous remercions de votre achat</p>
           </div>
 

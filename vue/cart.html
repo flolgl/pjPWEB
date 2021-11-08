@@ -45,11 +45,20 @@
                 <div class="card mb-4 checkOutCart">
                     <div class="card-body">
 
-                        <label>
-                            <!--     <input data-provide="datepicker" required="required"> -->
-                            <input type="text" class="dateselect" required="required"/>
-                            <span>Date</span>
-                        </label>
+                        <form method="POST" class="formulaire" action="./index.php?controle=Loueur&action=addVoiture">
+
+
+                            <div class="form-outline mb-4">
+                                <input type="text" id="dateDebutInput" name="dateDebut" class="form-control form-control-lg" value="<?php echo date('d/m/Y'); ?>"/>
+                                <label class="form-label" for="dateDebutInput">Debut de la location</label>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <input type="date" id="dateFinInput" name="dateFin" class="form-control form-control-lg" value="<?php echo $oldDate; ?>"/>
+                                <label class="form-label" for="dateFinInput">Fin de la location</label>
+                            </div>
+
+                        </form>
 
                         <h5 class="mb-3">Montant total :</h5>
 
@@ -81,8 +90,7 @@
         </div>
     </div>
 
-    <?php require("./vue/footer.html");
-    ?>
+    <?php require("./vue/footer.html");?>
 
 </body>
 <style>
@@ -91,4 +99,10 @@
         top: 20px;
     }
 </style>
+
+<script>
+    document.querySelectorAll('.form-outline').forEach(formOutline => {
+        new mdb.Input(formOutline).init();
+    });
+</script>
 </html>

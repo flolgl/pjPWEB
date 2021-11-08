@@ -27,6 +27,8 @@ class Cart
             $i++;
         }
 
+        $oldDate = isset($_POST["dateFin"]) ? $_POST["dateFin"] : "";
+
 
         require("./vue/cart.html");
     }
