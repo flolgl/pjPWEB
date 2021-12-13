@@ -1,7 +1,13 @@
 <?php
 
+/**
+ * Controleur gérant le panier du site
+ */
 class Cart
 {
+    /**
+     * Fonction permettant d'afficher le panier
+     */
     public function renderCart(){
 
         $articles = array();
@@ -38,6 +44,9 @@ class Cart
         require("./vue/cart.html");
     }
 
+    /**
+     * Fonction permettant de retirer un item du panier
+     */
     public function removeCarFromPanier(){
 
         foreach($_SESSION["panier"] as $k => $v){
@@ -50,6 +59,9 @@ class Cart
         header("Location: ./index.php?controle=Cart&action=renderCart");
     }
 
+    /**
+     * Fonction permettant de louer les voitures dans le panier
+     */
     public function louerVoitures(){
         if (empty($_POST["dateDebut"]) || empty($_POST["dateFin"]))
             return header("Location: ./index.php?controle=Cart&action=renderCart");
