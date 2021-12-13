@@ -7,6 +7,7 @@ class UserDB{
     private $userAuth = false;
 
     /**
+     * Constructeur
      * @param $email string email du user, utilisée comme login
      * @param $pw string le password du user
      */
@@ -16,6 +17,7 @@ class UserDB{
     }
 
     /**
+     * Fonction permettant de connecter un user
      * @return boolean le cookie d'authentification si la connexion est ok, false dans le cas contraire
      */
     public function connectUser(){
@@ -26,6 +28,11 @@ class UserDB{
     }
 
 
+    /**
+     * Fonction permettant de déterminer si un user existe en utilisant l'email
+     * @param $email string l'email du user
+     * @return bool true si le user existe, false dans le cas contraire
+     */
     public static function doesUserExists($email){
         if(empty($email))
             return false;
@@ -47,6 +54,11 @@ class UserDB{
         return !empty($resultat);
     }
 
+    /**
+     * Fonction permettant de déterminer si un user existe en utilisant l'id
+     * @param $userId string le user id
+     * @return bool true si le user existe, false dans le cas contraire
+     */
     public static function doesUserExistsWithId($userId){
         if(empty($userId))
             return false;
@@ -68,6 +80,11 @@ class UserDB{
         return !empty($resultat);
     }
 
+    /**
+     * Fonction permettant de récupérer le groupe d'un user (loueur ou client)
+     * @param $email string l'email du user
+     * @return string 0 si client, 1 si loueur et empty si user n'existe pas
+     */
     public static function getGroup($email){
         require("./modele/connect.php");
 
@@ -87,12 +104,17 @@ class UserDB{
 
     }
 
-    public static function insertUserIntoBdd($profil, $group = à){
+    /**
+     * Fonction permettant d'ajouter un user dans la db
+     * @param $profil array Les infos d'un futur user
+     * @param $group int le groupe du user
+     * @return bool true si tout s'est bien passé
+     */
+    public static function insertUserIntoBdd($profil, $group = 0){
         require("./modele/connect.php");
         $hashedPassword = password_hash($profil["pw"], PASSWORD_DEFAULT);
-        var_dump($group);
 
-            $sql = "INSERT INTO user (nom, prenom, nomEntreprise, codePostal, password, email, groupe) VALUES (:nom, :prenom, :nomEntreprise, :codePostal, :pw, :email, :groupe)";
+        $sql = "INSERT INTO user (nom, prenom, nomEntreprise, codePostal, password, email, groupe) VALUES (:nom, :prenom, :nomEntreprise, :codePostal, :pw, :email, :groupe)";
         try{
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':pw', $hashedPassword, PDO::PARAM_STR);
@@ -141,6 +163,11 @@ class UserDB{
         return time()<$resultat[0]["jetonTime"];
     }
 
+    /**
+     * Permet de récuperer le nom et prénom d'un user avec l'id
+     * @param $userId string l'id du user
+     * @return string le nom et prenom d'un user
+     */
     public static function getNameWithUserId($userId){
         require("./modele/connect.php");
 
@@ -160,6 +187,8 @@ class UserDB{
     }
 
     /**
+     * Fonction permettant de récupérer l'id d'un user
+     * @param $email string l'email du user
      * @return int l'id en bdd du user
      */
     public static function getUserId($email){
@@ -182,6 +211,11 @@ class UserDB{
     }
 
 
+    /**
+     * Fonction permettant de récupérer l'email d'un user
+     * @param $userId string l'id du user
+     * @return int l'email du user
+     */
     public static function getUserMail($userId){
         require("./modele/connect.php");
 
@@ -233,6 +267,8 @@ class UserDB{
     }
 
     /**
+     * Fonction permettant de générer une string 'cookie' d'authentification
+     * @param $id string id du user
      * @return array Génère le cookie unique en premier indice et le timestamp max du cookie en deuxième indice
      */
     private function generateCookie($id){
@@ -244,6 +280,7 @@ class UserDB{
 
 
     /**
+     * Fonction permettant de générer une string random
      * @return string Une string random
      */
     private function generateRandomString(){
