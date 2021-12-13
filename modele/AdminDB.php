@@ -1,16 +1,16 @@
 <?php
 
+/**
+ * Modèle gérant l'aspect admin du site
+ */
 class AdminDB{
 
 
     /**
-     * Détermine si l'utilisateur peut se connecter
-     * @return bool true si le user existe et peut se connecter car login + pw corrects, false dans le cas contraire
+     * Détermine si l'admin peut se connecter
+     * @return bool true si l'admin existe et peut se connecter car login + pw corrects, false dans le cas contraire
      */
     public static function adminCanConnect($login, $pw){
-        if (empty($login) || empty($pw))
-            return false;
-
         require("./modele/connect.php");
 
         $sql = "SELECT pw FROM administrateur WHERE login=:login";
@@ -26,10 +26,7 @@ class AdminDB{
         }
 
         //var_dump($resultat[0]["password"]); die();
-        if (empty($resultat))
-            return false;
-
-        return password_verify($pw, $resultat[0]["pw"]);
+        return !empty($resultat) && password_verify($pw, $resultat[0]["pw"]);
 
     }
 }

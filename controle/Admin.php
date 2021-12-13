@@ -1,15 +1,27 @@
 <?php
 
+/**
+ * Controleur gérant l'aspect Admin du site
+ */
 class Admin{
 
+    /**
+     * @var string Raison d'un retour négatif du form
+     */
     private $res = "";
 
+    /**
+     * Fonction appellant la vue
+     */
     public function renderAdmin(){
         $profil = $this->getPostInfo();
         $res = $this->res;
         require("./vue/adminAddLoueur.html");
     }
 
+    /**
+     * Fonction permettant de process le form d'ajout d'un loueur
+     */
     public function processAddLoueur(){
         $profil = $this->getPostInfo();
         require("./controle/utils/FormValidation.php");
@@ -30,12 +42,22 @@ class Admin{
         $this->renderAdmin();
     }
 
+    /**
+     * Fonction de déterminer si un admin peut se connecter
+     * @param $login string le login de l'admin
+     * @param $pw string le password de l'admin
+     * @return bool true si l'admin peut se connecter, false dans le cas contraire
+     */
     private static function adminCanConnect($login, $pw){
         require("./modele/AdminDB.php");
 
-        return AdminDB::adminCanConnect($login, $pw);
+        return !empty($login) && !empty($pw) && AdminDB::adminCanConnect($login, $pw);
     }
 
+    /**
+     * Fonction permettant de récuper l'ensemble des infos nécessaires pour afficher et traiter le form d'ajout d'un loueur
+     * @return array le tableau des inputs dans POST
+     */
     private function getPostInfo(){
         $tab = array();
 
