@@ -2,6 +2,11 @@
 
 class LocationDB{
 
+    /**
+     * Fonction permettant de récupérer toutes les locations d'un user
+     * @param $login L'adresse mail du user
+     * @return array L'ensemble des locations d'un user
+     */
     public static function getAllLocationsOfUser($login){
         require("./modele/connect.php");
 
@@ -19,6 +24,10 @@ class LocationDB{
         return $resultat;
     }
 
+    /**
+     * Fonction permettant d'update la fin de location d'une voiture
+     * @param $idLoc string L'id de la location à update
+     */
     public static function updateLocationFinDate($idLoc){
         require("./modele/connect.php");
 
@@ -35,6 +44,10 @@ class LocationDB{
         }
     }
 
+    /**
+     * Permet de retirer une voiture du statut en location
+     * @param $idLoc string L'id de la voiture pour laquelle on met fin à la location
+     */
     public static function removeCarFromLocation($idLoc){
         require("./modele/connect.php");
 
@@ -56,6 +69,11 @@ class LocationDB{
         }
     }
 
+    /**
+     * Fonction permettant de récupérer la facturation d'une location
+     * @param $idLoc string l'id de la location
+     * @return array Array d'une ligne avec la facturation de la location ou array vide si la location n'existe pas
+     */
     public static function getFacturation($idLoc){
         require("./modele/connect.php");
         $sql = "SELECT v.type, v.plaque, v.type, l.idLoc, user.nomEntreprise AS nom, l.prixJour, l.prixJour*DATEDIFF(l.tFin, l.tDebut) AS total, DATEDIFF(l.tFin, l.tDebut) as duree FROM location AS l, voiture AS v, user WHERE l.idLoc = :idLoc AND l.idVoiture = v.id AND user.id = l.idClient"; //Trigger s'occupe de mettre en table historique
@@ -71,6 +89,11 @@ class LocationDB{
         }
     }
 
+    /**
+     * Fonction permettant de récupérere le client id et l'id de location associés à une voiture
+     * @param $carId l'id de la voiture
+     * @return array un table d'une ligne avec les infos de la location et du client ou un tableau vide si rien n'a été trouvé
+     */
     public static function getClientAndLocationInfoFromCarId($carId){
         require("./modele/connect.php");
 
@@ -88,6 +111,11 @@ class LocationDB{
         return $resultat;
     }
 
+    /**
+     * Fonction permettant de récupérer les client d'un loueur
+     * @param $idLoueur string l'id du loueur
+     * @return array la liste des clients
+     */
     public static function getAllClientsOfLoueur($idLoueur){
         require("./modele/connect.php");
 
@@ -106,6 +134,11 @@ class LocationDB{
     }
 
 
+    /**
+     * Permet de récupérer toutes les factures clients d'un loueur
+     * @param $idLoueur string l'id du loueur
+     * @return array Liste contenant les factures clients d'un loueur
+     */
     public static function getAllFactureOfLoueurDB($idLoueur){
         require("./modele/connect.php");
         $sql = "SELECT v.type, v.plaque, v.type, l.idLoc, u.nomEntreprise AS nom, l.prixJour, l.prixJour*DATEDIFF(l.tFin, l.tDebut) AS total, DATEDIFF(l.tFin, l.tDebut) as duree FROM location AS l, voiture AS v, user AS u WHERE v.idLoueur = :idLoueur AND v.id = l.idVoiture AND l.idClient = u.id";
@@ -123,6 +156,13 @@ class LocationDB{
         return $resultat;
     }
 
+    /**
+     * Permet de récupérer toutes les factures clients d'un loueur sur une date
+     * @param $loueurId string l'id du loueur
+     * @param $month string le mois pour lequel on veut les factures
+     * @param $year string l'année associée au mois
+     * @return array Liste contenant les factures clients d'un loueur
+     */
     public static function getAllFactureOfLoueurByMonth($loueurId, $month, $year){
         require("./modele/connect.php");
 
@@ -138,6 +178,15 @@ class LocationDB{
         return $factures;
     }
 
+    /**
+     * Permet de récupérer toutes les factures clients d'un loueur sur un mois
+     * @param $sql string la string sql
+     * @param $month string le mois pour lequel on veut les factures
+     * @param $year string l'année associée au mois
+     * @param $loueurId string l'id du loueur
+     * @return array Liste contenant les factures clients d'un loueur
+     */
+    //TODO : refactor le param sql (avec un UNION)
     private static function getAllFactureFromMonth($sql, $month, $year, $loueurId){
         require("./modele/connect.php");
         try{
@@ -155,6 +204,9 @@ class LocationDB{
         return $resultat;
     }
 
+    /*
+     * Fonction permettant de récupérer les mois pour lesquels un loueur à eu des factures de clients
+     */
     public static function getAllMonth(){
         require("./modele/connect.php");
         $sql="SELECT MONTH(payDate) AS m, YEAR(payDate) as y FROM location UNION SELECT MONTH(payDate) AS m, YEAR(payDate) as y FROM locationhistory ORDER BY `m`, `y` ASC";
@@ -172,6 +224,11 @@ class LocationDB{
     }
 
 
+    /**
+     * Fonction permettant de déterminer qu'une voiture est en état de location
+     * @param $vId string l'id de la voiture
+     * @return bool true si la voiture est louée, false dans le cas contraire
+     */
     public static function isVoitureLouee($vId){
         require("./modele/connect.php");
 
@@ -192,6 +249,14 @@ class LocationDB{
     }
 
 
+    /**
+     * Fonction permettant de louer une voiture
+     * @param $vId string L'id de la voiture
+     * @param $cId string L'id du client
+     * @param $debut string Date de début de la location
+     * @param $fin string Date de fin de la location
+     * @param $payDate string Date de paiement de la location
+     */
     public static function louerVoiture($vId, $cId, $debut, $fin, $payDate){
         require_once("./modele/VoitureDB.php");
         if (!VoitureDB::isVoitureDispo($vId) || self::isVoitureLouee($vId))

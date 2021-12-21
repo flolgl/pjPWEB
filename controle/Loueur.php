@@ -1,8 +1,13 @@
 <?php
 
+/**
+ * Controleur gérant l'aspect Loueur du site
+ */
 class Loueur
 {
-
+    /**
+     * @var string Raison d'un retour négatif du form
+     */
     private $res = "";
 
     /**
@@ -19,6 +24,7 @@ class Loueur
     }
 
     /**
+     * Fonction permettant de déterminer si visiteur est logged in et loueur
      * @return bool true si user est loueur et connecté, false dans le cas contraire
      */
     private function isLoueurAndLoggedIn(){
@@ -28,7 +34,8 @@ class Loueur
     }
 
     /**
-     * @return array Tab composé de clés => nom de la voiture et de valeurs => nom de la photo. Ajouter .webp !
+     * Fonction permettant de récupérer une map des images de voitures
+     * @return array Tab composé de clés => nom de la voiture && de valeurs => nom de la photo
      */
     private function getVoituresNamesAndPhotoNamesMap(){
         require_once("./modele/VoitureDB.php");
@@ -90,6 +97,7 @@ class Loueur
     }
 
     /**
+     * Fonction déterminant si une image est valide
      * @param $image string l'input du menu déroulant
      * @param $imageUpload array l'image de l'input file
      * @return bool true si l'image est valide
@@ -114,6 +122,7 @@ class Loueur
     }
 
     /**
+     * Fonction permettant d'encoder en JSON le tableau d'une voiture
      * @param $car array tab à JSONifié
      * @return false|string le tab JSONifié
      */
@@ -130,6 +139,7 @@ class Loueur
     }
 
     /**
+     * Fonction permettant de récuper l'ensemble des infos nécessaires pour afficher et traiter l'ajout d'une voiture
      * @return array Les inputs du form
      */
     private function getPostInfo(){
@@ -153,6 +163,7 @@ class Loueur
     }
 
     /**
+     * Fonction permettant de vérifier qu'une plaque respecte le format français
      * @param $plaque string L'input mis dans le champs plaque
      * @return false|int true si la plaque est au bon format
      */
@@ -163,6 +174,7 @@ class Loueur
     }
 
     /**
+     * Fonction permettant de vérifier que chacune des cases du tab sont remplies. Chaque case correspond à un user input
      * @param $car array tab des inputs
      * @return bool true si tous les champs sont remplis
      */

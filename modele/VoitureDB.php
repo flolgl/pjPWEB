@@ -2,18 +2,19 @@
 
 class VoitureDB{
 
+    /**
+     * Fonction permettant de set une voiture en mode contraire du mode actuel
+     * @param $voitureId string l'id de la voiture
+     * @return bool true si tout c'est bien passé, false si la voiture n'existe pas
+     */
     public static function setDispo($voitureId){
 
         $dispo = self::getDispoState($voitureId);
 
         if (!isset($dispo))
-            return;
+            return false;
 
-        if ($dispo[0]["etatL"] === "disponible")
-            $etat = "revision";
-        else
-            $etat = "disponible";
-
+        $dispo[0]["etatL"] === "disponible" ?  $etat = "revision" : $etat = "disponible";
         require("./modele/connect.php");
 
         $sql = "UPDATE voiture SET etatL = :etat WHERE id = :id";
@@ -24,14 +25,18 @@ class VoitureDB{
 
             if (!$stmt->execute())
                 die  ("Echec de requête SQL \n");
-            else
-                $resultat = $stmt->fetchAll(PDO::FETCH_ASSOC); //tableau d'enregistrements
+
         }catch(PDOException $e){
             die  ("Echec de requête SQL : " . utf8_encode($e->getMessage()) . "\n");
         }
-        return $resultat;
+        return true;
     }
 
+    /**
+     * Fonction permettant de récupérer l'état d'une voiture
+     * @param $voitureId string l'id de la voiture
+     * @return array Tab d'une ligne comportant l'état de la voiture, tab vide si voiture n'existe pas
+     */
     public static function getDispoState($voitureId){
         require("./modele/connect.php");
 
@@ -50,6 +55,10 @@ class VoitureDB{
         return $resultat;
     }
 
+    /**
+     * Fonction permettant de récupérer les voitures disponibles
+     * @return array les voitures disponibles
+     */
     public static function getVoituresDispo(){
         require("./modele/connect.php");
 
@@ -66,6 +75,10 @@ class VoitureDB{
         return $resultat;
     }
 
+    /**
+     * Fonction permettant de récupérer les noms et pic names de voitures
+     * @return array Tab comportant noms et pic names de voitures
+     */
     public static function getAllVoituresNamesAndPhotoName(){
         require("./modele/connect.php");
 
@@ -83,6 +96,11 @@ class VoitureDB{
         return $resultat;
     }
 
+    /**
+     * Fonction permettant de récuper les infos d'une voiture depuis un id de voiture
+     * @param $id string l'id de la voiture
+     * @return array Tab comportant les infos d'une voiture
+     */
     public static function getVoitureFromId($id){
         require("./modele/connect.php");
 
@@ -102,6 +120,11 @@ class VoitureDB{
         return $resultat;
     }
 
+    /**
+     * Fonction permettant de savoir si une voiture existe à partir d'une plaque
+     * @param $plaque string la plaque
+     * @return bool true si la voiture existe, false dans le cas contraire
+     */
     public static function doesVoitureExists($plaque){
 
         require("./modele/connect.php");
@@ -122,10 +145,17 @@ class VoitureDB{
         return !empty($resultat);
     }
 
+    /**
+     * Fonction permettant d'ajouter une nouvelle voiture
+     * @param $car array les infos de la voiture
+     * @param $json string tab JSON stringifié comportant les caractéristiques d'une voiture
+     * @param $idL string l'id du loueur de la voiture
+     * @return bool true si tout s'est bien passé
+     */
     public static function insertNewVoiture($car, $json, $idL){
         require("./modele/connect.php");
 
-        var_dump($car, $json, $idL);
+        //var_dump($car, $json, $idL);
 
         $sql = "INSERT INTO voiture (type, caract, photo, plaque, etatL, prix, idLoueur) VALUES (:carName, :caract, :photo, :plaque, :etatL, :prix, :idL)";
         try{
@@ -151,6 +181,13 @@ class VoitureDB{
         return true;
     }
 
+    /**
+     * Fonction permettant de récup le catalogue d'un loueur
+     * @param $email string l'email d'un loueur
+     * @param $stockCar bool afficher les voitures en stock
+     * @param $rentedCar bool afficher les voitures louées
+     * @return array le catalogue du loueur
+     */
     public static function getCatalogueOfLoueur($email, $stockCar, $rentedCar){
         require("./modele/connect.php");
 
@@ -172,6 +209,12 @@ class VoitureDB{
         return $resultat;
     }
 
+    /**
+     * Fonction permettant de déterminer le choix d'un user
+     * @param $stockCar bool afficher les voitures en stock
+     * @param $rentedCar bool afficher les voitures louées
+     * @return string la requête sql
+     */
     private static function getUserChoiceOfShowing($stockCar, $rentedCar){
         if ($stockCar && $rentedCar) // montrer toutes les voitures
             return "SELECT voiture.* FROM voiture, user WHERE user.email = :email AND voiture.idLoueur = user.id";
@@ -187,6 +230,11 @@ class VoitureDB{
 
     }
 
+    /**
+     * Fonction permettant de déterminer si une image existe
+     * @param $image string le nom de l'image
+     * @return bool true si l'image existe
+     */
     public static function doesImageExists($image){
         require("./modele/connect.php");
 
@@ -207,6 +255,7 @@ class VoitureDB{
     }
 
     /**
+     * Getter du prix d'une voiture
      * @param $vId int l'id du véhicule
      * @return float le prix
      */
@@ -230,7 +279,11 @@ class VoitureDB{
     }
 
 
-
+    /**
+     * Fonction permettant de savoir si une voiture est dispo
+     * @param $vId string l'id de la voiture
+     * @return bool true si la voiture est dispo
+     */
     public static function isVoitureDispo($vId){
         require("./modele/connect.php");
 

@@ -1,8 +1,8 @@
 <?php
-	$hostname = "localhost:58000";	//ou localhost
+	$hostname = "localhost:80";	//ou localhost
 	$base= "pjpweb";
 	$loginBD= "root";	//ou "root"
-	$passBD="root";
+	$passBD="";
 	//$pdo = null;
 
 try {

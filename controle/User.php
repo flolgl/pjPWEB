@@ -1,25 +1,30 @@
 <?php
 
+/**
+ * Controleur gérant un User
+ */
 class User{
+
+    /**
+     * @var string Raison d'un retour négatif du form
+     */
     private $res = "";
 
-
-    public function __construct(){
-
-    }
-
+    /**
+     * Fonction permettant de process le form de login
+     */
     public function processLogin(){
-        include "./controle/FormValidation.php";
-        require ("./modele/LoginClass.php");
+        require_once("./controle/utils/FormValidation.php");
+        require_once("./modele/UserDB.php");
         $profil = $this->getLoginPostInfo();
 
         if (!FormValidation::areInputFilled($profil) || !FormValidation::isEmailRight($profil["email"]))
             $this->res = "Il est indispensable de remplir correctement tous les champs";
         else {
-            $user = new LoginClass($profil["email"], $profil["pw"]);
+            $user = new UserDB($profil["email"], $profil["pw"]);
+
             $cookie = $user->connectUser();
             if($cookie != null){
-                require_once("./modele/UserDB.php");
                 $_SESSION["uAuth"] = $cookie;
                 $_SESSION["login"] = $profil["email"];
                 $_SESSION["group"] = UserDB::getGroup($profil["email"]);
@@ -34,6 +39,9 @@ class User{
         $this->renderLogin();
     }
 
+    /**
+     * Fonction permettant d'afficher le catalogue de voitures du site
+     */
     private function renderAllCatalogueOfLoueur(){
         require("./modele/VoitureDB.php");
         $stockCar = isset($_GET["stockCar"]) ? $_GET["stockCar"] === "true" : true;
@@ -67,6 +75,12 @@ class User{
         require("./vue/loueurCatalogue.html");
     }
 
+    /**
+     * Fonction permettant d'afficher le nom d'un loueur
+     * @param $idE string id du loueur
+     * @param $tab array tab comportant le nom des entreprises
+     * @return string le nom de l'entreprise ou "choisir une entreprise" si nom pas trouvé
+     */
     private function getEntrepriseName($idE, $tab){
         foreach($tab as $v)
             if ($v["id"] === $idE)
@@ -74,6 +88,9 @@ class User{
         return "Choisir une entreprise";
     }
 
+    /**
+     * Permet d'afficher les locations d'un client
+     */
     private function renderAllLocationsOfClient(){
         require("./modele/LocationDB.php");
         $cars = LocationDB::getAllLocationsOfUser($_SESSION["login"]);
@@ -84,6 +101,9 @@ class User{
         require("./vue/carSelection.html");
     }
 
+    /**
+     * Permet de déterminer s'il faut afficher le catalogue d'un client ou d'un loueur
+     */
     public function renderAllLocationsOfUser(){
         if (!User::isUserLoggedIn())
             return self::redirectUserToLoginAndDisconnect();
@@ -96,6 +116,9 @@ class User{
 
     }
 
+    /**
+     * Fonction permettant d'arrêter la location d'une voiture
+     */
     public function arreterLocation(){
         if (!User::isUserLoggedIn())
             return self::redirectUserToLoginAndDisconnect();
@@ -108,16 +131,27 @@ class User{
         header("Location: ./index.php?controle=User&action=renderAllLocationsOfUser");
     }
 
+    /**
+     * Fonction permettant de déterminer si visiteur est logged in
+     * @return bool true si user est connecté, false dans le cas contraire
+     */
     public static function isUserLoggedIn(){
         require("./modele/UserDB.php");
         return isset($_SESSION["login"]) && isset($_SESSION["uAuth"]) && UserDB::isAuthOk($_SESSION["login"], $_SESSION["uAuth"]);
     }
 
+    /**
+     * Fonction permettant de déconnecter un user
+     */
     public static function redirectUserToLoginAndDisconnect(){
         $_SESSION["login"] = null; $_SESSION["uAuth"] = null;
         header("Location: index.php?controle=User&action=renderProfile");
     }
 
+    /**
+     * Permet de récupérer les infos dans POST du form de login
+     * @return array infos dans POST du form de login
+     */
     private function getLoginPostInfo(){
         $profil = array();
         $profil["email"] = isset($_POST["email"]) ? $_POST["email"] : "";
@@ -125,6 +159,10 @@ class User{
         return $profil;
     }
 
+    /**
+     * Permet de récupérer les infos dans POST du form de register
+     * @return array infos dans POST du form de register
+     */
     private function getRegisterPostInfo(){
         $profil = array();
         $profil["email"] = isset($_POST["email"]) ? $_POST["email"] : "";
@@ -138,10 +176,12 @@ class User{
         return $profil;
     }
 
+    /**
+     * Fonction permettant de process l'enregistrement d'un user
+     */
     public function processRegister(){
-        include "./controle/FormValidation.php";
+        include "./controle/utils/FormValidation.php";
         require_once("./modele/UserDB.php");
-        require ("./modele/LoginClass.php");
 
         $profil = $this->getRegisterPostInfo();
         //var_dump($profil);
@@ -154,7 +194,7 @@ class User{
             $this->res = "Utilisateur déjà existant";
         else {
             if (UserDB::insertUserIntoBdd($profil)){
-                $user = new LoginClass($profil["email"], $profil["pw"]);
+                $user = new UserDB($profil["email"], $profil["pw"]);
                 $cookie = $user->connectUser();
                 if($cookie != null) {
                     $_SESSION["uAuth"] = $cookie;
@@ -170,36 +210,49 @@ class User{
 
     }
 
+    /**
+     * Fonction permettant d'afficher le form de login
+     */
     public function renderLogin(){
         $profil = $this->getLoginPostInfo();
         $res = $this->res;
         require("./vue/login.html");
     }
 
-
+    /**
+     * Fonction permettant d'afficher le form de register
+     */
     public function renderRegister(){
         $profil = $this->getRegisterPostInfo();
         $res = $this->res;
         require("./vue/register.html");
     }
 
+    /**
+     * Fonction permettant d'afficher le form de login ou l'accueil en fonction du statut de connexion du visiteur
+     */
     public function renderProfile(){
-        //1633537030
         require("./modele/UserDB.php");
         if( !empty($_SESSION["login"]) && !empty($_SESSION["uAuth"]) &&
             UserDB::doesUserExists($_SESSION["login"]) && UserDB::isAuthOk($_SESSION["login"], $_SESSION["uAuth"]))
-            // rediriger vers profil
+            // TODO : rediriger vers profil
             header("Location: ./index.php");
         else
             $this->renderLogin();
     }
 
+    /**
+     * Fonction permettant de déconnecter un user
+     */
     public function disconnect(){
         $_SESSION["login"] = $_SESSION["uAuth"]  = null;
         header("Location: ./index.php");
 
     }
 
+    /**
+     * Fonction permettant d'afficher les factures d'un client
+     */
     public function renderFacturation(){
         if (!User::isUserLoggedIn())
             return self::redirectUserToLoginAndDisconnect();
@@ -221,6 +274,10 @@ class User{
         require("./vue/factureLocation.html");
     }
 
+    /**
+     * Fonction permettant d'afficher les factures d'un loueur
+
+     */
     public function getAllFacturesOfLoueur(){
         if (!User::isUserLoggedIn())
             return self::redirectUserToLoginAndDisconnect();
@@ -241,6 +298,9 @@ class User{
         require("./vue/factureLocation.html");
     }
 
+    /**
+     * Fonction permettant d'afficher les factures d'un mois d'un loueur
+     */
     public function getFactureOfMonth(){
         if (!User::isUserLoggedIn())
             return self::redirectUserToLoginAndDisconnect();
